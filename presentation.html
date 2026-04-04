@@ -385,6 +385,119 @@
     }
     .bottom-line strong { color: #E07070; }
 
+    /* ═══════════════════════════════════════════════════
+       SLIDE 0 — INTRO / HOW IT WORKS
+       ═══════════════════════════════════════════════════ */
+    #s0 {
+      background: var(--bg);
+      flex-direction: column;
+      padding: 3.5rem 8vw;
+      align-items: flex-start;
+    }
+    #s0 .intro-grid {
+      width: 100%; max-width: 1100px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3.5rem; margin-top: 2rem; align-items: start;
+    }
+    .agent-pipeline {
+      display: flex; flex-direction: column; gap: .55rem;
+    }
+    .ap-step {
+      display: grid; grid-template-columns: 48px 1fr;
+      gap: 0; position: relative;
+    }
+    .ap-step:not(:last-child)::after {
+      content: ''; position: absolute;
+      left: 23px; top: 44px; width: 2px; height: calc(100% - 2px);
+      background: var(--border);
+    }
+    .ap-icon {
+      width: 46px; height: 46px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0; border: 1px solid var(--border);
+      background: var(--surface); z-index: 1;
+    }
+    .ap-body { padding: .6rem 0 .6rem 1rem; }
+    .ap-name { font-size: .88rem; font-weight: 700; color: var(--text); }
+    .ap-desc { font-size: .76rem; color: var(--text-3); line-height: 1.5; margin-top: .1rem; }
+    .ap-return { font-family: 'IBM Plex Mono',monospace; font-size: .65rem; color: #5CC45C; margin-top: .2rem; }
+
+    .why-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    .why-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.1rem 1.2rem;
+    }
+    .why-card .wc-icon { font-size: 1.3rem; margin-bottom: .5rem; }
+    .why-card .wc-title { font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; }
+    .why-card .wc-body  { font-size: .75rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ═══════════════════════════════════════════════════
+       SLIDE EDA — DATA EXPLORATION
+       ═══════════════════════════════════════════════════ */
+    #seda {
+      flex-direction: column; padding: 3rem 7vw;
+      align-items: flex-start;
+    }
+    #seda .eda-grid {
+      width: 100%; max-width: 1100px;
+      display: grid; grid-template-columns: 1.3fr 1fr;
+      gap: 2.5rem; margin-top: 1.5rem;
+    }
+    #seda .eda-left { display: flex; flex-direction: column; gap: 1.5rem; }
+    #seda .eda-right { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .eda-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.1rem 1.3rem;
+    }
+    .eda-card-title {
+      font-family: 'IBM Plex Mono',monospace; font-size: .64rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--text-3); margin-bottom: .8rem;
+    }
+
+    /* Sparkline */
+    .sparkline-svg { width: 100%; height: 80px; display: block; }
+
+    /* Spend bars */
+    .spend-bar-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .45rem; }
+    .spend-bar-lbl { width: 120px; flex-shrink: 0; font-size: .76rem; color: var(--text-2); text-align: right; }
+    .spend-bar-track { flex: 1; height: 14px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+    .spend-bar-fill  { height: 100%; border-radius: 3px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
+    .spend-bar-val   { width: 44px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-3); }
+
+    /* Anomaly list */
+    .anomaly-row {
+      display: grid; grid-template-columns: 90px 1fr auto;
+      align-items: center; gap: .6rem;
+      padding: .45rem 0; border-bottom: 1px solid var(--border);
+      font-size: .78rem;
+    }
+    .anomaly-row:last-child { border-bottom: none; }
+    .anomaly-date { font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-3); }
+    .anomaly-desc { color: var(--text-2); line-height: 1.4; }
+    .anomaly-z { font-family: 'IBM Plex Mono',monospace; font-size: .72rem;
+      background: rgba(169,30,44,.15); color: #E07070;
+      border: 1px solid rgba(169,30,44,.3); border-radius: 3px; padding: .15rem .4rem; white-space: nowrap; }
+
+    /* Corr dots */
+    .corr-row { display: flex; align-items: center; gap: .7rem; margin-bottom: .4rem; }
+    .corr-lbl { width: 110px; flex-shrink: 0; font-size: .76rem; color: var(--text-2); text-align: right; }
+    .corr-track { flex: 1; height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; position: relative; }
+    .corr-fill { height: 100%; border-radius: 99px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
+    .corr-val { width: 38px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-3); }
+
+    /* score badge */
+    .readiness-score {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(39,174,96,.1); border: 1px solid rgba(39,174,96,.3);
+      border-radius: 6px; padding: .3rem .8rem;
+      font-family: 'IBM Plex Mono',monospace; font-size: .78rem; color: #5CC45C;
+      margin-bottom: 1rem;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 800px) {
       #s2, #s5 { flex-direction: column; }
@@ -408,6 +521,183 @@
 
 <div id="progress"></div>
 <div id="dots"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S0 — INTRO: WHAT IS AUTO-MMM
+     ═══════════════════════════════════════════════════════════ -->
+<section class="slide" id="s0">
+  <div style="width:100%;max-width:1100px;">
+    <div class="eyebrow r">Auto-MMM · How It Works</div>
+    <h2 class="r" style="margin-top:.5rem;">Point Claude at your data.<br>Get a boardroom-ready MMM report.</h2>
+    <p class="r" style="max-width:60ch;margin-top:.5rem;">Five specialist agents coordinate autonomously — no human involvement between rounds. Each agent has a single role so no agent can both produce and approve its own output.</p>
+
+    <div class="intro-grid r">
+      <!-- Left: agent pipeline -->
+      <div>
+        <div class="mr-label" style="margin-bottom:1rem;">The 5-Agent Loop</div>
+        <div class="agent-pipeline">
+          <div class="ap-step">
+            <div class="ap-icon">🔍</div>
+            <div class="ap-body">
+              <div class="ap-name">Data Explorer <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· Round 1 only</span></div>
+              <div class="ap-desc">EDA on raw data — collinearity, anomalies, VIF, readiness score (1–5)</div>
+              <div class="ap-return">→ EXPLORATION_DONE</div>
+            </div>
+          </div>
+          <div class="ap-step">
+            <div class="ap-icon">⚙️</div>
+            <div class="ap-body">
+              <div class="ap-name">Tuner <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· Round 2+</span></div>
+              <div class="ap-desc">Reads prior fit metrics, proposes one config change per round (adstock, Hill slope, samples)</div>
+              <div class="ap-return">→ CONFIG_UPDATED or NO_CHANGE</div>
+            </div>
+          </div>
+          <div class="ap-step">
+            <div class="ap-icon">🧮</div>
+            <div class="ap-body">
+              <div class="ap-name">Models <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· every round</span></div>
+              <div class="ap-desc">Ridge + bootstrap · PyMC Bayesian · LightweightMMM/NNLS — run in sequence, results saved to JSON</div>
+              <div class="ap-return">→ results/latest.json</div>
+            </div>
+          </div>
+          <div class="ap-step">
+            <div class="ap-icon">📊</div>
+            <div class="ap-body">
+              <div class="ap-name">Analyst</div>
+              <div class="ap-desc">ROI rankings, model agreement, contribution plausibility, business narrative — under 400 words</div>
+              <div class="ap-return">→ ANALYSIS_DONE</div>
+            </div>
+          </div>
+          <div class="ap-step">
+            <div class="ap-icon">🔎</div>
+            <div class="ap-body">
+              <div class="ap-name">Critic</div>
+              <div class="ap-desc">6-point quality gate: overfitting, sign correctness, plausibility, consensus honesty, collinearity, sample size</div>
+              <div class="ap-return">→ APPROVED or REVISE</div>
+            </div>
+          </div>
+          <div class="ap-step">
+            <div class="ap-icon">📝</div>
+            <div class="ap-body">
+              <div class="ap-name">Reporter <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· after APPROVED</span></div>
+              <div class="ap-desc">Plain English for CMO audience — no jargon, no model names in headline. Generates report.md + report.pptx</div>
+              <div class="ap-return">→ REPORT_DONE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: why this approach -->
+      <div>
+        <div class="mr-label" style="margin-bottom:1rem;">Why Three Models?</div>
+        <div class="why-grid">
+          <div class="why-card">
+            <div class="wc-icon">⚡</div>
+            <div class="wc-title">Ridge</div>
+            <div class="wc-body">Regularised regression + 200-sample bootstrap. Runs in seconds. Always runs — no extra dependencies.</div>
+          </div>
+          <div class="why-card">
+            <div class="wc-icon">🎲</div>
+            <div class="wc-title">PyMC (Bayesian)</div>
+            <div class="wc-body">Full posterior distributions. Handles small samples via priors. Gold standard for production budget decisions.</div>
+          </div>
+          <div class="why-card" style="grid-column:1/-1;">
+            <div class="wc-icon">✅</div>
+            <div class="wc-title">LightweightMMM / NNLS</div>
+            <div class="wc-body">Positive-constrained estimates — no negative ROI. JAX-accelerated when available, NNLS fallback otherwise.</div>
+          </div>
+          <div class="why-card" style="grid-column:1/-1; border-color:var(--border-red); background:rgba(169,30,44,.05);">
+            <div class="wc-icon">🎯</div>
+            <div class="wc-title">Agreement = confidence. Disagreement = diagnostic.</div>
+            <div class="wc-body">Where all three agree on a channel, act with confidence. Where they disagree — that's the model telling you the data is thin, channels are collinear, or an assumption is wrong. No single model can tell you this.</div>
+          </div>
+        </div>
+        <div style="margin-top:1.2rem;padding:.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+          <div class="eyebrow" style="margin-bottom:.4rem;">To run</div>
+          <code style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:#5CC45C;">Read program.md and run the loop.</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SEDA — DATA EXPLORATION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="slide" id="seda">
+  <div style="width:100%;max-width:1100px;">
+    <div class="eyebrow r">Data Explorer · Round 1</div>
+    <h2 class="r" style="margin-top:.4rem;">EDA before any model training</h2>
+    <div class="readiness-score r">✅ Readiness Score: 4 / 5 — 132 weekly periods · 0 missing values · no severe collinearity</div>
+
+    <div class="eda-grid">
+      <!-- LEFT COLUMN -->
+      <div class="eda-left">
+
+        <!-- KPI sparkline -->
+        <div class="eda-card r">
+          <div class="eda-card-title">Revenue over time (weekly, USD)</div>
+          <svg class="sparkline-svg" id="kpi-spark" viewBox="0 0 500 80" preserveAspectRatio="none"></svg>
+          <p style="font-size:.72rem;color:var(--text-3);margin-top:.5rem;">Mean $30.3M · Max $114M (holiday spikes) · CV 67% — right-skewed, seasonal pattern</p>
+        </div>
+
+        <!-- Channel spend bars -->
+        <div class="eda-card r">
+          <div class="eda-card-title">Total spend by channel (2021–2024)</div>
+          <div id="spend-bars"></div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="eda-right">
+
+        <!-- Anomalies -->
+        <div class="eda-card r">
+          <div class="eda-card-title">Anomalies detected</div>
+          <div class="anomaly-row">
+            <div class="anomaly-date">2022-05-30</div>
+            <div class="anomaly-desc">Revenue $114M + google_shopping spend spike — synchronized outlier, likely promo event</div>
+            <div class="anomaly-z">z = 4.1σ</div>
+          </div>
+          <div class="anomaly-row">
+            <div class="anomaly-date">2023-05-29</div>
+            <div class="anomaly-desc">Revenue $113M — possible annual promotional period</div>
+            <div class="anomaly-z">z = 4.1σ</div>
+          </div>
+          <div class="anomaly-row">
+            <div class="anomaly-date">2023-12-11</div>
+            <div class="anomaly-desc">Revenue $104M — holiday season spike</div>
+            <div class="anomaly-z">z = 3.6σ</div>
+          </div>
+          <div class="anomaly-row">
+            <div class="anomaly-date">2023-05-22</div>
+            <div class="anomaly-desc">Revenue $95M — keep with flag</div>
+            <div class="anomaly-z">z = 3.2σ</div>
+          </div>
+        </div>
+
+        <!-- Correlation with KPI -->
+        <div class="eda-card r">
+          <div class="eda-card-title">Channel correlation with revenue (Pearson r)</div>
+          <div id="corr-bars"></div>
+          <p style="font-size:.72rem;color:var(--text-3);margin-top:.6rem;">google_display (r=0.02) and google_video (r=−0.05) show near-zero KPI correlation — low identifiability.</p>
+        </div>
+
+        <!-- Key flags -->
+        <div class="eda-card r" style="border-color:rgba(169,30,44,.3);background:rgba(169,30,44,.04);">
+          <div class="eda-card-title">Flags before modelling</div>
+          <div style="font-size:.78rem;color:var(--text-2);line-height:1.8;">
+            <div>⚠️ <strong style="color:var(--text);">google_shopping</strong> — 76.5% zero-spend weeks · sparse · may not be identifiable</div>
+            <div>⚠️ <strong style="color:var(--text);">2022-05-30</strong> — add binary event indicator before attribution</div>
+            <div>✅ No severe collinearity · max VIF 6.57 · no channel pair |r| &gt; 0.7</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══════════════════════════════════════════════════════════
      S1 — TITLE
@@ -728,6 +1018,101 @@
 </section>
 
 <script>
+// ── EDA Data ──────────────────────────────────────────────────────────
+
+// Weekly revenue values (normalized to 0-1 for sparkline)
+const KPI_RAW = [19473450,30739845,34865010,28460700,27254880,30177990,26834160,27643530,32895900,33282210,22040550,22696200,22553070,19688040,26064330,22348050,23406390,19296720,22347870,25217850,20756430,19039230,17793690,17609340,20374200,21461940,20568780,20680710,19394100,23072760,18803340,18627000,23680350,113974910,28085970,23697810,23012550,20601540,21208710,22050810,23048100,21003840,21018930,19558890,19793430,20313810,21456960,20617380,22254810,23673000,25157250,29046150,36697500,37561740,34017210,35568540,35118720,28248120,29337930,22748460,20427570,21459990,24162060,23444340,20936940,20490660,23088060,30155850,25498800,23028210,25178130,24539850,22543260,27765390,25706880,23851890,22696320,22637340,24888120,26070360,25019910,22618680,22520550,24100560,23918040,25234500,25695690,29040690,25994610,27698490,113025700,94653890,31063290,29568720,22649130,22337880,20904060,25046970,26095620,22879440,21688830,19451520,22108830,22248150,20705400,104083700,29718840,23540580,21028320,24013440,25869780,25285050,22817970,26068830,27665820,28649040,28285290,23826870,21453570,22166430,23521320,25706730,23484510,23059980,22424370,22397430,22095750,23033250,21622710,32274180];
+
+// Spend totals (millions USD)
+const SPEND_DATA = [
+  { lbl:'Meta Facebook',   val:624.0, color:'#A91E2C' },
+  { lbl:'Meta Instagram',  val:226.0, color:'#D63031' },
+  { lbl:'Google PMax',     val:74.2,  color:'#5BA3D9' },
+  { lbl:'Google Video',    val:16.2,  color:'#7AB8E8' },
+  { lbl:'Google Search',   val:18.0,  color:'#9DD0F0' },
+  { lbl:'Google Display',  val:6.6,   color:'#B8DCF4' },
+  { lbl:'Google Shopping', val:3.3,   color:'#2a2a32' },
+  { lbl:'Meta Other',      val:0.5,   color:'#2a2a32' },
+];
+
+// Channel KPI correlations
+const CORR_DATA = [
+  { lbl:'Meta Facebook',   r:0.61,  color:'#A91E2C' },
+  { lbl:'Google Search',   r:0.49,  color:'#D63031' },
+  { lbl:'Meta Instagram',  r:0.41,  color:'#C03030' },
+  { lbl:'Google Shopping', r:0.34,  color:'#5BA3D9' },
+  { lbl:'Meta Other',      r:0.21,  color:'#5BA3D9' },
+  { lbl:'Google PMax',     r:0.29,  color:'#7AB8E8' },
+  { lbl:'Google Display',  r:0.02,  color:'#2a2a32' },
+  { lbl:'Google Video',    r:-0.05, color:'#2a2a32' },
+];
+
+function renderSparkline() {
+  const svg = document.getElementById('kpi-spark');
+  if (!svg) return;
+  const min = Math.min(...KPI_RAW), max = Math.max(...KPI_RAW);
+  const n = KPI_RAW.length;
+  const pts = KPI_RAW.map((v,i) => {
+    const x = (i/(n-1))*498+1;
+    const y = 78 - ((v-min)/(max-min))*72;
+    return `${x},${y}`;
+  });
+  // Area fill
+  const areaD = `M1,79 L${pts.join(' L')} L499,79 Z`;
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#A91E2C" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#A91E2C" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="${areaD}" fill="url(#sg)"/>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="#A91E2C" stroke-width="1.8"/>
+  `;
+  // Anomaly dots
+  const anomalyIdxs = [26, 87, 105, 111]; // approx week indices for anomalies
+  anomalyIdxs.forEach(i => {
+    if (i < n) {
+      const x = (i/(n-1))*498+1;
+      const y = 78 - ((KPI_RAW[i]-min)/(max-min))*72;
+      svg.innerHTML += `<circle cx="${x}" cy="${y}" r="4" fill="#E07070" stroke="#0c0c0e" stroke-width="1.5"/>`;
+    }
+  });
+}
+
+function renderSpendBars() {
+  const el = document.getElementById('spend-bars');
+  if (!el) return;
+  const maxVal = Math.max(...SPEND_DATA.map(d=>d.val));
+  el.innerHTML = SPEND_DATA.map(d => {
+    const pct = (d.val/maxVal)*88;
+    return `<div class="spend-bar-row">
+      <div class="spend-bar-lbl">${d.lbl}</div>
+      <div class="spend-bar-track"><div class="spend-bar-fill" data-pct="${pct}" style="background:${d.color}"></div></div>
+      <div class="spend-bar-val">$${d.val>=1?d.val.toFixed(0)+'M':Math.round(d.val*1000)+'K'}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderCorrBars() {
+  const el = document.getElementById('corr-bars');
+  if (!el) return;
+  el.innerHTML = CORR_DATA.map(d => {
+    const pct = Math.max(0, (d.r/0.7)*85);
+    const color = d.r >= 0.4 ? '#A91E2C' : d.r >= 0.2 ? '#D63031' : d.r >= 0 ? '#5BA3D9' : '#2a2a32';
+    return `<div class="corr-row">
+      <div class="corr-lbl">${d.lbl}</div>
+      <div class="corr-track"><div class="corr-fill" data-pct="${pct}" style="background:${color}"></div></div>
+      <div class="corr-val">${d.r.toFixed(2)}</div>
+    </div>`;
+  }).join('');
+}
+
+// Init EDA charts (will animate when slide enters view via existing IO)
+renderSparkline();
+renderSpendBars();
+renderCorrBars();
+
 // ── Data ──────────────────────────────────────────────────────────────
 const ROI = [
   { lbl:'Google Shopping ⚠️',  roi:22.339, color:'#E07070', top:false },

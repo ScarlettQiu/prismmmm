@@ -375,6 +375,114 @@ def print_summary(metadata: dict) -> None:
     print(f"{'='*60}")
 
 
+# ── Notion knowledge fetch ────────────────────────────────────────────────────
+
+NOTION_FIELD_DB   = "3382169d-cf08-8134-855b-c04d754c733e"
+NOTION_BIZ_DB     = "3382169d-cf08-8132-bbbe-cc73c0257ef2"
+NOTION_ISSUES_DB  = "3382169d-cf08-8130-907d-d6bc83e98598"
+
+
+def _notion_query(database_id: str, token: str) -> list[dict]:
+    import urllib.request, urllib.error
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/databases/{database_id}/query",
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Notion-Version": "2022-06-28",
+            "Content-Type": "application/json",
+        },
+        data=b"{}",
+    )
+    with urllib.request.urlopen(req) as resp:
+        return json.loads(resp.read())["results"]
+
+
+def _text(prop: dict) -> str:
+    """Extract plain text from a Notion rich_text or title property."""
+    for key in ("rich_text", "title"):
+        if key in prop:
+            return "".join(t.get("plain_text", "") for t in prop[key])
+    return ""
+
+
+def fetch_notion_knowledge(token: str) -> dict:
+    """Pull all three Notion databases and return a knowledge dict."""
+    print("Fetching knowledge layer from Notion...")
+
+    # Field Definitions
+    fields = {}
+    for page in _notion_query(NOTION_FIELD_DB, token):
+        p = page["properties"]
+        field_name = _text(p.get("field", {}))
+        if not field_name:
+            continue
+        fields[field_name] = {
+            "label":            _text(p.get("label", {})),
+            "type":             p.get("type",  {}).get("select",  {}).get("name", ""),
+            "unit":             _text(p.get("unit", {})),
+            "description":      _text(p.get("description", {})),
+            "expected_roi_min": p.get("expected_roi_min", {}).get("number"),
+            "expected_roi_max": p.get("expected_roi_max", {}).get("number"),
+            "notes":            _text(p.get("notes", {})),
+        }
+
+    # Business Context
+    biz = {}
+    for page in _notion_query(NOTION_BIZ_DB, token):
+        p = page["properties"]
+        key = _text(p.get("key", {}))
+        if key:
+            biz[key] = {
+                "value": _text(p.get("value", {})),
+                "notes": _text(p.get("notes", {})),
+            }
+
+    # Known Issues
+    issues = []
+    for page in _notion_query(NOTION_ISSUES_DB, token):
+        p = page["properties"]
+        issue = _text(p.get("issue", {}))
+        if issue:
+            issues.append({
+                "issue":      issue,
+                "affects":    _text(p.get("affects", {})),
+                "date_range": _text(p.get("date_range", {})),
+                "severity":   p.get("severity", {}).get("select", {}).get("name", ""),
+                "action":     _text(p.get("action", {})),
+            })
+
+    print(f"  Loaded {len(fields)} field definitions, {len(biz)} business context rows, {len(issues)} known issues")
+    return {"fields": fields, "business_context": biz, "known_issues": issues}
+
+
+def merge_notion_into_metadata(metadata: dict, notion: dict) -> dict:
+    """Enrich metadata with Notion knowledge layer."""
+    # Override channel_notes with Notion descriptions
+    for col, info in notion["fields"].items():
+        if col in metadata.get("columns", {}).get("channels", []):
+            metadata.setdefault("channel_notes", {})[col] = info.get("description", "")
+        # Inject expected ROI ranges for Critic/Analyst
+        metadata.setdefault("expected_roi", {})[col] = {
+            "min": info.get("expected_roi_min"),
+            "max": info.get("expected_roi_max"),
+            "label": info.get("label", col),
+            "unit":  info.get("unit", ""),
+        }
+
+    # Merge business context
+    metadata["business_context"] = {k: v["value"] for k, v in notion["business_context"].items()}
+
+    # Merge known issues (union with auto-detected anomalies)
+    existing_issues = {a["date"] for a in metadata.get("anomalies", [])}
+    for issue in notion["known_issues"]:
+        if issue["issue"] not in existing_issues:
+            metadata.setdefault("known_issues", []).append(issue)
+
+    metadata["_notion_synced"] = datetime.now().isoformat()
+    return metadata
+
+
 def main():
     parser = argparse.ArgumentParser(description="Auto-MMM dataset discovery")
     parser.add_argument("--source", choices=["csv", "bigquery", "gsheet"], default="csv")
@@ -387,6 +495,8 @@ def main():
     parser.add_argument("--out-metadata", default="metadata.json", help="Output metadata path")
     parser.add_argument("--no-overwrite-config", action="store_true",
                         help="Skip writing config.json if it already exists")
+    parser.add_argument("--notion-token", default=None,
+                        help="Notion integration token — fetches knowledge layer from Notion")
     args = parser.parse_args()
 
     df = load_source(args)
@@ -402,6 +512,12 @@ def main():
         source_info["gsheet_sheet"] = args.sheet_name
 
     metadata, config = discover(df, source_info)
+
+    # Enrich with Notion knowledge layer if token provided
+    if args.notion_token:
+        notion = fetch_notion_knowledge(args.notion_token)
+        metadata = merge_notion_into_metadata(metadata, notion)
+
     print_summary(metadata)
 
     # Write metadata

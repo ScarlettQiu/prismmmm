@@ -1,6 +1,17 @@
 # Auto-MMM
 
-Autonomous Marketing Mix Modeling powered by Claude. Point an AI agent at `program.md`, and it runs three MMM models, critiques its own analysis, iterates on configuration, and produces a stakeholder PowerPoint — without human involvement.
+Autonomous Marketing Mix Modeling powered by Claude. Point an AI agent at `program.md` and it runs **three independent MMM models**, critiques its own analysis through a four-agent loop, iterates on model configuration, and produces a stakeholder report — without human involvement.
+
+The three-model approach is deliberate: **Ridge** (fast, regularised), **PyMC** (Bayesian), and **LightweightMMM** (positive-constrained) each make different assumptions. Where all three agree, you can act with confidence. Where they disagree, that's a diagnostic — thin data, collinearity, or a modelling assumption worth questioning. No single model can tell you this.
+
+The four specialist agents keep roles separated so no single agent can both produce and approve its own output:
+
+| Agent | Role | Output |
+|---|---|---|
+| **Tuner** | Proposes one config change per round based on prior fit metrics | Updated `config.json` |
+| **Analyst** | Interprets ROI, contributions, and model agreement into a business narrative | `rounds/R{N}_analysis.md` |
+| **Critic** | Runs 6 quality checks — overfitting, sign correctness, plausibility, consensus honesty, collinearity, sample size | `APPROVED` or `REVISE` |
+| **Reporter** | Rewrites the approved analysis in plain English for a CMO audience, generates deck | `report.md` + `report.pptx` |
 
 ---
 
@@ -12,24 +23,38 @@ ORCHESTRATOR (program.md)
         ├── TUNER (agents/tuner.md)
         │       Reads prior round fit metrics, proposes one config change
         │       (adstock decay, Hill slope, PyMC samples). Edits config.json.
+        │       One change per round keeps experiments comparable.
         │       Returns: CONFIG_UPDATED or NO_CHANGE
         │
-        ├── [run_models.py — runs all 3 MMM models]
+        ├── run_models.py
+        │       Runs all 3 MMM models in sequence:
+        │         • Ridge      — regularised regression + 200-sample bootstrap CI
+        │         • PyMC       — full Bayesian with DelayedSaturatedMMM (or NNLS fallback)
+        │         • LightMMM   — Google JAX-based Hill + adstock (or NNLS fallback)
+        │       Saves results/latest.json + rounds/R{N}_results.json
         │
         ├── ANALYST (agents/analyst.md)
-        │       Interprets ROI rankings, contribution %, model agreement.
-        │       Writes a business narrative with actual numbers.
+        │       Reads model output, writes business narrative with actual numbers.
+        │       Covers ROI rankings, model agreement/disagreement, contribution %,
+        │       and what the data can and cannot support.
         │       Returns: ANALYSIS_DONE
         │
         ├── CRITIC (agents/critic.md)
-        │       Runs 6 checks: overfitting, sign correctness, contribution
-        │       plausibility, consensus honesty, collinearity, sample size.
+        │       Six-point quality gate — challenges the Analyst before anything
+        │       reaches the report:
+        │         1. Overfitting (R²=1.0 on small samples)
+        │         2. Sign correctness (negative ROI despite confirmed spend)
+        │         3. Contribution plausibility (<5% or >80% attributed to media)
+        │         4. Consensus honesty (did Analyst ignore model disagreements?)
+        │         5. Collinearity (channels that co-moved, confusing attribution)
+        │         6. Sample size caveat (limitation clearly communicated?)
+        │       On REVISE: Analyst fixes once, Critic re-reviews. Max one cycle.
         │       Returns: APPROVED or REVISE: <reason>
-        │         → if REVISE: Analyst fixes once, Critic re-reviews
-        │         → max one revision cycle per round
         │
         └── REPORTER (agents/reporter.md)
-                Rewrites analysis in plain English for CMO audience.
+                Only runs after APPROVED. Rewrites findings in plain English —
+                no jargon, no model names in the headline, no unexplained CIs.
+                Audience: marketing director or CMO.
                 Runs report_builder.py → report.md + report.pptx
                 Returns: REPORT_DONE
 ```

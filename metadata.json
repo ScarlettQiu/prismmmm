@@ -1,0 +1,461 @@
+{
+  "_generated": "2026-04-03T22:22:35.619345",
+  "_source": {
+    "source": "csv",
+    "data_path": "/Users/qiuyu/.cache/kagglehub/datasets/datatattle/dt-mart-market-mix-modeling/versions/1/Secondfile.csv"
+  },
+  "dataset": {
+    "n_rows": 12,
+    "n_periods": 12,
+    "date_range": [
+      "2015-07-01",
+      "2016-06-01"
+    ],
+    "date_frequency": "monthly",
+    "entities": {
+      "Unnamed: 0": {
+        "unique_values": 12,
+        "sample": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "Revenue_CameraAccessory": {
+        "unique_values": 12,
+        "sample": [
+          26387431.0011512,
+          25368804.0007087,
+          26761949.7548497,
+          25344512.7554762,
+          30524321.0
+        ]
+      },
+      "Revenue_EntertainmentSmall": {
+        "unique_values": 12,
+        "sample": [
+          109301979.358871,
+          101172468.279073,
+          120288369.833945,
+          98089507.7339315,
+          110489907.952099
+        ]
+      },
+      "Revenue_GameCDDVD": {
+        "unique_values": 12,
+        "sample": [
+          16884873.7980574,
+          15100016.4917277,
+          22992593.5703063,
+          20810850.2184689,
+          24346112.0507811
+        ]
+      },
+      "Revenue_GamingHardware": {
+        "unique_values": 12,
+        "sample": [
+          47700159.5475916,
+          35614536.6224062,
+          48025619.906459,
+          48481948.1454746,
+          59679816.2435872
+        ]
+      },
+      "total_gmv": {
+        "unique_values": 12,
+        "sample": [
+          387210245.705672,
+          332254705.543175,
+          404210208.80442,
+          339779950.335617,
+          409473749.246468
+        ]
+      },
+      "Units_Camera": {
+        "unique_values": 12,
+        "sample": [
+          10442,
+          8606,
+          9969,
+          8006,
+          9419
+        ]
+      },
+      "Units_CameraAccessory": {
+        "unique_values": 12,
+        "sample": [
+          22525,
+          25406,
+          25484,
+          25926,
+          28820
+        ]
+      },
+      "Units_EntertainmentSmall": {
+        "unique_values": 12,
+        "sample": [
+          81510,
+          81292,
+          84429,
+          70521,
+          81713
+        ]
+      },
+      "Units_GameCDDVD": {
+        "unique_values": 12,
+        "sample": [
+          9623,
+          8868,
+          13729,
+          11857,
+          14472
+        ]
+      },
+      "Units_GamingHardware": {
+        "unique_values": 12,
+        "sample": [
+          22799,
+          22818,
+          22916,
+          20510,
+          25250
+        ]
+      },
+      "total_Units": {
+        "unique_values": 12,
+        "sample": [
+          146899,
+          146990,
+          156527,
+          136820,
+          159674
+        ]
+      },
+      "Mrp_Camera": {
+        "unique_values": 12,
+        "sample": [
+          307171062,
+          239860540,
+          297290334,
+          220481659,
+          265051779
+        ]
+      },
+      "Mrp_CameraAccessory": {
+        "unique_values": 12,
+        "sample": [
+          46579865,
+          48682388,
+          49390147,
+          48983623,
+          58149299
+        ]
+      },
+      "Mrp_EntertainmentSmall": {
+        "unique_values": 12,
+        "sample": [
+          215177836,
+          200789508,
+          239222732,
+          181131192,
+          225617394
+        ]
+      },
+      "Mrp_GameCDDVD": {
+        "unique_values": 12,
+        "sample": [
+          25543981,
+          21540469,
+          36282567,
+          33222863,
+          41935279
+        ]
+      },
+      "Mrp_GamingHardware": {
+        "unique_values": 12,
+        "sample": [
+          86592743,
+          60482015,
+          69230755,
+          68839592,
+          86722095
+        ]
+      },
+      "total_Mrp": {
+        "unique_values": 12,
+        "sample": [
+          681065487,
+          571354920,
+          691416535,
+          552658929,
+          677475846
+        ]
+      },
+      "Discount_Camera": {
+        "unique_values": 12,
+        "sample": [
+          120235260.0,
+          84861659.8507402,
+          111148658.261139,
+          73428527.5177338,
+          80618187.0
+        ]
+      },
+      "Discount_CameraAccessory": {
+        "unique_values": 12,
+        "sample": [
+          20192433.9988488,
+          23313583.9992913,
+          22628197.2451503,
+          23639110.2445238,
+          27624978.0
+        ]
+      },
+      "Discount_EntertainmentSmall": {
+        "unique_values": 12,
+        "sample": [
+          105875856.641129,
+          99617039.7209274,
+          118934362.166055,
+          83041684.2660685,
+          115127486.047901
+        ]
+      },
+      "Discount_GameCDDVD": {
+        "unique_values": 12,
+        "sample": [
+          8659107.20194263,
+          6440452.50827233,
+          13289973.4296937,
+          12412012.7815311,
+          17589166.9492189
+        ]
+      },
+      "Discount_GamingHardware": {
+        "unique_values": 12,
+        "sample": [
+          38892583.4524084,
+          24867478.3775938,
+          21205135.093541,
+          20357643.8545254,
+          27042278.7564128
+        ]
+      },
+      "total_Discount": {
+        "unique_values": 12,
+        "sample": [
+          293855241.294328,
+          239100214.456825,
+          287206326.19558,
+          212878978.664383,
+          268002096.753532
+        ]
+      },
+      "Year": {
+        "unique_values": 2,
+        "sample": [
+          2016,
+          2015
+        ]
+      },
+      "Month": {
+        "unique_values": 12,
+        "sample": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "Sponsorship": {
+        "unique_values": 12,
+        "sample": [
+          42000000.0,
+          117000000.0,
+          416000000.0,
+          243000000.0,
+          317000000.0
+        ]
+      },
+      "Content.Marketing": {
+        "unique_values": 8,
+        "sample": [
+          9000000.0,
+          6000000.0,
+          4000000.0,
+          0.0,
+          8000000.0
+        ]
+      },
+      "Online.marketing": {
+        "unique_values": 12,
+        "sample": [
+          229000000.0,
+          199000000.0,
+          184000000.0,
+          165000000.0,
+          237000000.0
+        ]
+      },
+      "Other": {
+        "unique_values": 3,
+        "sample": [
+          271000000.0,
+          159000000.0,
+          50000000.0
+        ]
+      },
+      "Date": {
+        "unique_values": 12,
+        "sample": [
+          "2016-01-01",
+          "2016-02-01",
+          "2016-03-01",
+          "2016-04-01",
+          "2016-05-01"
+        ]
+      },
+      "NPS": {
+        "unique_values": 12,
+        "sample": [
+          47.1,
+          50.3,
+          49.0,
+          51.8,
+          47.3
+        ]
+      }
+    }
+  },
+  "columns": {
+    "date": "month",
+    "kpi": "Revenue_Camera",
+    "channels": [
+      "Total.Investment",
+      "TV",
+      "Digital",
+      "Affiliates",
+      "SEM",
+      "Radio"
+    ],
+    "controls": [
+      "Discount_Camera",
+      "Discount_CameraAccessory",
+      "Discount_EntertainmentSmall",
+      "Discount_GameCDDVD",
+      "Discount_GamingHardware",
+      "total_Discount",
+      "NPS"
+    ],
+    "all": [
+      "Unnamed: 0",
+      "month",
+      "Revenue_Camera",
+      "Revenue_CameraAccessory",
+      "Revenue_EntertainmentSmall",
+      "Revenue_GameCDDVD",
+      "Revenue_GamingHardware",
+      "total_gmv",
+      "Units_Camera",
+      "Units_CameraAccessory",
+      "Units_EntertainmentSmall",
+      "Units_GameCDDVD",
+      "Units_GamingHardware",
+      "total_Units",
+      "Mrp_Camera",
+      "Mrp_CameraAccessory",
+      "Mrp_EntertainmentSmall",
+      "Mrp_GameCDDVD",
+      "Mrp_GamingHardware",
+      "total_Mrp",
+      "Discount_Camera",
+      "Discount_CameraAccessory",
+      "Discount_EntertainmentSmall",
+      "Discount_GameCDDVD",
+      "Discount_GamingHardware",
+      "total_Discount",
+      "Year",
+      "Month",
+      "Total.Investment",
+      "TV",
+      "Digital",
+      "Sponsorship",
+      "Content.Marketing",
+      "Online.marketing",
+      "Affiliates",
+      "SEM",
+      "Radio",
+      "Other",
+      "Date",
+      "NPS"
+    ]
+  },
+  "kpi_stats": {
+    "mean": 148723008.29,
+    "median": 159295843.7,
+    "std": 67289516.19,
+    "min": 61550.0,
+    "max": 242732530.5,
+    "zeros": 0,
+    "nulls": 0
+  },
+  "channel_stats": {
+    "Total.Investment": {
+      "mean": 705500000.0,
+      "max": 1702000000.0,
+      "zero_pct": 0.0,
+      "null_pct": 0.0,
+      "corr_to_kpi": 0.851
+    },
+    "TV": {
+      "mean": 37000000.0,
+      "max": 93000000.0,
+      "zero_pct": 8.3,
+      "null_pct": 0.0,
+      "corr_to_kpi": 0.716
+    },
+    "Digital": {
+      "mean": 24833333.33,
+      "max": 126000000.0,
+      "zero_pct": 0.0,
+      "null_pct": 0.0,
+      "corr_to_kpi": 0.424
+    },
+    "Affiliates": {
+      "mean": 51166666.67,
+      "max": 74000000.0,
+      "zero_pct": 0.0,
+      "null_pct": 0.0,
+      "corr_to_kpi": 0.93
+    },
+    "SEM": {
+      "mean": 75916666.67,
+      "max": 319000000.0,
+      "zero_pct": 0.0,
+      "null_pct": 0.0,
+      "corr_to_kpi": 0.564
+    },
+    "Radio": {
+      "mean": 15666666.67,
+      "max": 27000000.0,
+      "zero_pct": 0.0,
+      "null_pct": 75.0,
+      "corr_to_kpi": 0.673
+    }
+  },
+  "anomalies": [],
+  "warnings": [
+    "Only 12 time periods \u2014 MMM needs 50+ for reliable estimates"
+  ],
+  "channel_notes": {
+    "Total.Investment": "",
+    "TV": "",
+    "Digital": "",
+    "Affiliates": "",
+    "SEM": "",
+    "Radio": ""
+  }
+}

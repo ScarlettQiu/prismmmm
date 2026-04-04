@@ -1,11 +1,17 @@
 """Data loading and preprocessing for auto-MMM.
 
-Loads the DT Mart dataset, applies adstock and Hill saturation
-transforms, and returns a model-ready DataFrame.
+Supports three data sources via config.json:
+  - CSV:       {"source": "csv",       "data_path": "./data.csv"}
+  - BigQuery:  {"source": "bigquery",  "bigquery_query": "SELECT ...", "bigquery_project": "my-proj"}
+  - GSheet:    {"source": "gsheet",    "gsheet_id": "1BxiM...", "gsheet_sheet": "Sheet1"}
+  - (default)  no "source" key → reads "data_path" as CSV (backwards compatible)
+
+Run discover.py first to auto-generate config.json and metadata.json from any source.
 """
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -16,11 +22,52 @@ def load_config(path: str = "config.json") -> dict:
     return json.loads(Path(path).read_text())
 
 
-def load_raw(cfg: dict) -> pd.DataFrame:
+def _load_csv(cfg: dict) -> pd.DataFrame:
     path = Path(cfg["data_path"]).expanduser()
-    df = pd.read_csv(path)
+    return pd.read_csv(path)
+
+
+def _load_bigquery(cfg: dict) -> pd.DataFrame:
+    try:
+        from google.cloud import bigquery
+    except ImportError:
+        print("ERROR: google-cloud-bigquery not installed. Run: pip install google-cloud-bigquery")
+        sys.exit(1)
+    project = cfg.get("bigquery_project")
+    query   = cfg["bigquery_query"]
+    client  = bigquery.Client(project=project)
+    print(f"  Querying BigQuery: {query[:80]}...")
+    return client.query(query).to_dataframe()
+
+
+def _load_gsheet(cfg: dict) -> pd.DataFrame:
+    try:
+        import gspread
+        from google.oauth2.service_account import Credentials
+    except ImportError:
+        print("ERROR: gspread not installed. Run: pip install gspread google-auth")
+        sys.exit(1)
+    sheet_id   = cfg["gsheet_id"]
+    sheet_name = cfg.get("gsheet_sheet", "Sheet1")
+    scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    creds  = Credentials.from_service_account_file("service_account.json", scopes=scopes)
+    gc     = gspread.authorize(creds)
+    ws     = gc.open_by_key(sheet_id).worksheet(sheet_name)
+    print(f"  Reading Google Sheet: {sheet_id} / {sheet_name}")
+    return pd.DataFrame(ws.get_all_records())
+
+
+def load_raw(cfg: dict) -> pd.DataFrame:
+    source = cfg.get("source", "csv")
+    if source == "bigquery":
+        df = _load_bigquery(cfg)
+    elif source == "gsheet":
+        df = _load_gsheet(cfg)
+    else:
+        df = _load_csv(cfg)
+
     # Parse date
-    df["date"] = pd.to_datetime(df[cfg["date_column"]], format=cfg["date_format"])
+    df["date"] = pd.to_datetime(df[cfg["date_column"]], format=cfg.get("date_format"))
     df = df.sort_values("date").reset_index(drop=True)
     return df
 

@@ -1216,7 +1216,7 @@ const io = new IntersectionObserver(entries => {
     const i = slides.indexOf(e.target);
     if (i !== -1) updateUI(i);
     e.target.querySelectorAll('.r').forEach(el=>el.classList.add('on'));
-    if (e.target.querySelector('.bar-fill')) setTimeout(()=>animateBars(e.target), 300);
+    if (e.target.querySelector('.bar-fill, .spend-bar-fill, .corr-fill')) setTimeout(()=>animateBars(e.target), 300);
   });
 }, {threshold: 0.45});
 

@@ -1,4 +1,4 @@
-"""Auto-MMM Dashboard — data exploration + model results.
+"""PrismMMM Dashboard — data exploration + model results.
 
 Run with:
     streamlit run dashboard.py
@@ -17,7 +17,7 @@ import streamlit as st
 # ── Page config ───────────────────────────────────────────────────────────────
 
 st.set_page_config(
-    page_title="Auto-MMM Report",
+    page_title="PrismMMM Report",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -364,7 +364,7 @@ def main():
         st.markdown(
             f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">'
             f'<span style="font-size:1.4rem">📈</span>'
-            f'<div><p style="margin:0;font-size:1rem;font-weight:700;color:#111">Auto-MMM</p>'
+            f'<div><p style="margin:0;font-size:1rem;font-weight:700;color:#111">PrismMMM</p>'
             f'<p style="margin:0;font-size:0.72rem;color:{GRAY}">Marketing Mix Model Report</p></div>'
             f'</div>',
             unsafe_allow_html=True,

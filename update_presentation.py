@@ -115,8 +115,8 @@ def patch_html(html, roi_js, contrib_js, state, fit_df):
 
     # ── Title ──────────────────────────────────────────────────────────
     html = re.sub(
-        r"<title>Auto-MMM — Round \d+ Results</title>",
-        f"<title>Auto-MMM — Round {round_n} Results</title>",
+        r"<title>PrismMMM — Round \d+ Results</title>",
+        f"<title>PrismMMM — Round {round_n} Results</title>",
         html
     )
 

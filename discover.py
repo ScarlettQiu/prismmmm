@@ -1,4 +1,4 @@
-"""Auto-MMM Dataset Discovery.
+"""PrismMMM Dataset Discovery.
 
 Profiles a raw dataset and writes:
   - metadata.json   ← rich knowledge file used by all agents
@@ -484,7 +484,7 @@ def merge_notion_into_metadata(metadata: dict, notion: dict) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Auto-MMM dataset discovery")
+    parser = argparse.ArgumentParser(description="PrismMMM dataset discovery")
     parser.add_argument("--source", choices=["csv", "bigquery", "gsheet"], default="csv")
     parser.add_argument("--path",       help="CSV file path")
     parser.add_argument("--query",      help="BigQuery SQL query")

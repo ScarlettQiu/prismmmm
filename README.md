@@ -1,6 +1,6 @@
 # PrismMMM
 
-**[→ Live Report](https://scarlettqiu.github.io/prismmmm/presentation.html)**
+**[→ Live Report](https://scarlettqiu.github.io/prismmmm/presentation.html)** · **[→ Dashboard](https://prismmmm-noavdwqyyxace4wktru2m8.streamlit.app/)**
 
 Autonomous Marketing Mix Modeling powered by Claude. Point an AI agent at `program.md` and it runs **three independent MMM models**, critiques its own analysis through a five-agent loop, iterates on model configuration, and produces a stakeholder report — without human involvement.
 

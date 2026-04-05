@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Auto-MMM — Round 2 Results</title>
+  <title>Auto-MMM — Round 3 Results</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,10 +13,10 @@
       --red-light:  #D63031;
       --red-dark:   #6B1020;
       --red-glow:   rgba(169,30,44,0.25);
-      --bg:         #0c0c0e;
-      --bg-2:       #111114;
-      --surface:    #18181c;
-      --surface-2:  #202026;
+      --bg:         #060d1f;
+      --bg-2:       #080f26;
+      --surface:    #0d1630;
+      --surface-2:  #111d38;
       --border:     rgba(255,255,255,0.07);
       --border-red: rgba(169,30,44,0.35);
       --text:       #f2f0ee;
@@ -101,7 +101,7 @@
        SLIDE 1 — TITLE  (full-bleed dark red, centered)
        ═══════════════════════════════════════════════════ */
     #s1 {
-      background: radial-gradient(ellipse 80% 70% at 50% 40%, #3d0a10 0%, #0c0c0e 70%);
+      background: radial-gradient(ellipse 80% 70% at 50% 40%, #3d0a10 0%, #060d1f 70%);
       flex-direction: column;
       text-align: center;
       padding: 3rem 6vw;
@@ -526,7 +526,7 @@
      S1 — TITLE
      ═══════════════════════════════════════════════════════════ -->
 <section class="slide" id="s1">
-  <div class="badge r kicker">Round 2 · Critic Approved ✓</div>
+  <div class="badge r kicker">Round 3 · Critic Approved ✓</div>
   <h1 class="r" style="margin-top:.8rem;">Auto-<span>MMM</span></h1>
   <p class="r" style="margin-top:.9rem;">Autonomous Marketing Mix Modelling — three independent models,<br>five specialist agents, zero manual tuning.</p>
   <div class="hero-stats r">
@@ -770,8 +770,8 @@
       <div class="con">Baseline-only model — no channel signal</div>
     </div>
     <div class="mr-mape">
-      <div class="mape-n" style="color:#5BA3D9;">20.4%</div>
-      <div class="mape-l">Test MAPE · R²=0.41</div>
+      <div class="mape-n" style="color:#5CC45C;">13.1%</div>
+      <div class="mape-l">Test MAPE · R²=0.46</div>
     </div>
   </div>
 
@@ -791,8 +791,8 @@
       <div class="con">Sensitive to outlier spend weeks</div>
     </div>
     <div class="mr-mape">
-      <div class="mape-n" style="color:#5CC45C;">21.5%</div>
-      <div class="mape-l">Test MAPE · R²=0.54</div>
+      <div class="mape-n" style="color:#5CC45C;">13.1%</div>
+      <div class="mape-l">Test MAPE · R²=0.46</div>
     </div>
   </div>
 
@@ -812,8 +812,8 @@
       <div class="con">Fallback BLM gives zero channel ROI</div>
     </div>
     <div class="mr-mape">
-      <div class="mape-n" style="color:#E07070;">21.1%</div>
-      <div class="mape-l">Test MAPE · R²=0.52</div>
+      <div class="mape-n" style="color:#5CC45C;">13.1%</div>
+      <div class="mape-l">Test MAPE · R²=0.46</div>
     </div>
   </div>
 </section>
@@ -839,12 +839,22 @@
         </div>
       </div>
       <div class="tl-node">
-        <div class="tl-circle best">
+        <div class="tl-circle">
           <div class="rnum">R2</div>
           <div class="rmape">20.4%</div>
         </div>
         <div class="tl-body">
           <div class="change">adstock lag<br>2 → 1 <span class="delta-g">▼12%</span></div>
+          <div class="verdict"><span class="badge" style="font-size:.6rem;">APPROVED</span></div>
+        </div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-circle best">
+          <div class="rnum">R3</div>
+          <div class="rmape">13.1%</div>
+        </div>
+        <div class="tl-body">
+          <div class="change">hill_ec<br>0.5 → 0.3 <span class="delta-g">▼36%</span></div>
           <div class="verdict"><span class="badge green" style="font-size:.6rem;">APPROVED ✓</span></div>
         </div>
       </div>
@@ -854,8 +864,10 @@
       <span class="trail-label">Best MAPE</span>
       <span class="trail-node">23.2%</span>
       <span class="trail-arrow">→</span>
-      <span class="trail-node best">20.4% ✓</span>
-      <span class="trail-note">— 12% reduction · Ridge R² 0.34 → 0.41 · NNLS R² 0.49 → 0.54</span>
+      <span class="trail-node">20.4%</span>
+      <span class="trail-arrow">→</span>
+      <span class="trail-node best">13.1% ✓</span>
+      <span class="trail-note">— 43% total reduction · PyMC best model · 3 rounds</span>
     </div>
   </div>
 </section>
@@ -870,7 +882,7 @@
     <p class="r">NNLS return per $1 spent. Only NNLS produced channel-level signal this round — Ridge and PyMC fallback both zeroed all channels.</p>
     <div class="s5-highlight r">
       <div class="hv">4.0×</div>
-      <div class="hl">Meta Instagram ROI · Round 2</div>
+      <div class="hl">Meta Instagram ROI · Round 3</div>
     </div>
   </div>
   <div class="s5-right">
@@ -884,7 +896,7 @@
 <section class="slide" id="s6">
   <div class="q-overline r"></div>
   <div class="q-text r"><em>Meta</em> drives<br><em>95%</em> of<br>attributed revenue.</div>
-  <div class="q-sub r">Meta Facebook 67.6% · Meta Instagram 27.8% · NNLS only · Round 2</div>
+  <div class="q-sub r">Meta Facebook 68.0% · Meta Instagram 27.7% · NNLS only · Round 3</div>
   <div class="triple r">
     <div class="triple-item" style="text-align:center;">
       <div class="n">3.0×</div>
@@ -892,12 +904,12 @@
     </div>
     <div class="triple-divider"></div>
     <div class="triple-item" style="text-align:center;">
-      <div class="n">95%</div>
+      <div class="n">96%</div>
       <div class="d">attributed revenue from Meta</div>
     </div>
     <div class="triple-divider"></div>
     <div class="triple-item" style="text-align:center;">
-      <div class="n">6.2×</div>
+      <div class="n">4.9×</div>
       <div class="d">Google Search ROI (unconfirmed)</div>
     </div>
   </div>
@@ -915,7 +927,7 @@
     <div style="width:100%; max-width:1080px; display:grid; grid-template-columns:1fr 1.4fr; gap:3.5rem; align-items:start;">
       <div class="r">
         <!-- SVG Donut — NNLS -->
-        <div class="col-eyebrow">NNLS Contribution (Round 2)</div>
+        <div class="col-eyebrow">NNLS Contribution (Round 3)</div>
         <svg class="donut-svg" viewBox="0 0 180 180" width="180" height="180" style="display:block; margin:0 auto 1.2rem;">
           <!-- baseline ~4% implied remainder -->
           <circle cx="90" cy="90" r="60" fill="none" stroke="#2a2a32" stroke-width="28"
@@ -992,27 +1004,27 @@
     <div class="rec-row r">
       <div class="rec-n">01</div>
       <div>
-        <div class="rec-title">Do not act on google_shopping ROI 22.3</div>
-        <div class="rec-body">The estimate is almost certainly an artifact of the 2022-05-30 synchronized outlier spike — not a real efficiency signal. Re-run Round 3 with a binary event indicator for that week before making any budget decision on Google Shopping.</div>
+        <div class="rec-title">Do not act on NNLS channel ROI — baseline has collapsed</div>
+        <div class="rec-body">NNLS assigned ~$30.6M/week to paid media — essentially all revenue, zero to organic. Google Shopping ROI of 36× escalated further in Round 3 after the hill_ec change, but this is a modelling artefact. All NNLS channel signals are invalidated until a non-zero baseline intercept is enforced.</div>
       </div>
     </div>
     <div class="rec-row r">
       <div class="rec-n">02</div>
       <div>
-        <div class="rec-title">Meta Instagram shows the most credible positive ROI</div>
-        <div class="rec-body">Instagram ROI 4.0 vs Facebook 3.0 — Instagram delivers more per dollar despite lower absolute spend. If budget reallocation is being considered within the Meta portfolio, directionally favour Instagram. Treat as hypothesis, not confirmed finding, until Ridge or PyMC corroborate.</div>
+        <div class="rec-title">Meta Instagram is directionally the strongest channel</div>
+        <div class="rec-body">Instagram ROI 4.0× vs Facebook 3.0× — Instagram delivers more per dollar despite lower absolute spend (£226M vs £624M). This direction has been consistent across all 3 rounds. Treat as hypothesis until Ridge or PyMC corroborate with a working attribution model.</div>
       </div>
     </div>
     <div class="rec-row r">
       <div class="rec-n">03</div>
       <div>
-        <div class="rec-title">Fix the model stack before Round 3</div>
-        <div class="rec-body">Install gcc so PyMC's full Bayesian MMM can run (expected ~5 min vs 30+ min pure Python). Retune Ridge with a narrower alpha range or switch to OLS. Without two working models, cross-model agreement — the core signal this system is designed to produce — is structurally impossible.</div>
+        <div class="rec-title">Fix the pipeline before running more rounds</div>
+        <div class="rec-body">Three priorities: (1) enforce NNLS baseline intercept, (2) install gcc so PyMC full Bayesian runs in ~5 min not 58 min, (3) fix Ridge/PyMC contribution pipeline to produce non-zero outputs. Without two working models, cross-model consensus — the core signal Auto-MMM is designed to produce — is impossible.</div>
       </div>
     </div>
 
     <div class="bottom-line r">
-      <strong>Bottom line:</strong> Meta (Facebook + Instagram) dominates attributed revenue at 95%+ share. The model stack needs repair before any channel ROI ranking is credible enough for budget reallocation.
+      <strong>Bottom line:</strong> Best test accuracy reached 13.1% (Round 3 PyMC). Meta dominates attributed revenue at 96%+ share. No budget reallocation until NNLS baseline is fixed and at least two models produce structurally sound attribution.
     </div>
   </div>
 </section>
@@ -1075,7 +1087,7 @@ function renderSparkline() {
     if (i < n) {
       const x = (i/(n-1))*498+1;
       const y = 78 - ((KPI_RAW[i]-min)/(max-min))*72;
-      svg.innerHTML += `<circle cx="${x}" cy="${y}" r="4" fill="#E07070" stroke="#0c0c0e" stroke-width="1.5"/>`;
+      svg.innerHTML += `<circle cx="${x}" cy="${y}" r="4" fill="#E07070" stroke="#060d1f" stroke-width="1.5"/>`;
     }
   });
 }
@@ -1114,27 +1126,31 @@ renderSpendBars();
 renderCorrBars();
 
 // ── Data ──────────────────────────────────────────────────────────────
+// AUTO-UPDATE: ROI_DATA_START
 const ROI = [
-  { lbl:'Google Shopping ⚠️',  roi:22.339, color:'#E07070', top:false },
-  { lbl:'Google Search',       roi:6.158,  color:'#D63031', top:false },
-  { lbl:'Meta Instagram',      roi:3.977,  color:'#A91E2C', top:true  },
-  { lbl:'Meta Facebook',       roi:2.985,  color:'#C23030', top:false },
-  { lbl:'Google Display',      roi:0.000,  color:'#2a2a32', top:false },
-  { lbl:'Google PMax',         roi:0.000,  color:'#2a2a32', top:false },
-  { lbl:'Google Video',        roi:0.000,  color:'#2a2a32', top:false },
-  { lbl:'Meta Other',          roi:0.000,  color:'#2a2a32', top:false },
+  { lbl:'google_shopping ⚠️', roi:36.277, color:'#E07070', top:true },
+  { lbl:'google_search', roi:4.941, color:'#A91E2C', top:false },
+  { lbl:'meta_instagram', roi:3.974, color:'#A91E2C', top:false },
+  { lbl:'meta_facebook', roi:3.005, color:'#A91E2C', top:false },
+  { lbl:'google_display', roi:0.000, color:'#1a2240', top:false },
+  { lbl:'google_pmax', roi:0.000, color:'#1a2240', top:false },
+  { lbl:'google_video', roi:0.000, color:'#1a2240', top:false },
+  { lbl:'meta_other', roi:0.000, color:'#1a2240', top:false }
 ];
+// AUTO-UPDATE: ROI_DATA_END
 
+// AUTO-UPDATE: CONTRIB_DATA_START
 const RIDGE = [
   { lbl:'Baseline',  pct:100.0, color:'#3a3a44' },
   { lbl:'All Media (zeroed)', pct:0.0, color:'#A91E2C' },
 ];
 const NNLS = [
-  { lbl:'Meta Facebook',   pct:67.57, color:'#A91E2C' },
-  { lbl:'Meta Instagram',  pct:27.75, color:'#D63031'  },
-  { lbl:'Google Search',   pct:3.91,  color:'#E07070'  },
-  { lbl:'Google Shopping', pct:2.74,  color:'#c06060'  },
+  { lbl:'Meta Facebook', pct:68.01, color:'#A91E2C' },
+  { lbl:'Meta Instagram', pct:27.74, color:'#D63031' },
+  { lbl:'Google Shopping', pct:4.44, color:'#c06060' },
+  { lbl:'Google Search', pct:3.14, color:'#E07070' }
 ];
+// AUTO-UPDATE: CONTRIB_DATA_END
 
 // ── Render bar charts ──────────────────────────────────────────────────
 function renderBars(id, data, maxVal) {

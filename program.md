@@ -69,8 +69,8 @@ Load the Notion token and refresh metadata.json:
 ```bash
 export $(grep -v '^#' .env | xargs) 2>/dev/null
 if [ -n "$NOTION_TOKEN" ]; then
-  python discover.py --source csv --path "$(python3 -c "import json; print(json.load(open('config.json'))['data_path'])")" --notion-token "$NOTION_TOKEN"
-  echo "Knowledge layer refreshed from Notion"
+  python discover.py --source csv --path "$(python3 -c "import json; print(json.load(open('config.json'))['data_path'])")" --notion-token "$NOTION_TOKEN" --no-overwrite-config
+  echo "Knowledge layer refreshed from Notion (config.json unchanged)"
 else
   echo "No NOTION_TOKEN in .env — skipping Notion refresh"
 fi

@@ -18,6 +18,16 @@
   "adstock_max_lag": 1,
   "hill_slope": 1.5,
   "hill_ec": 0.3,
+  "channel_adstock_decays": {
+    "google_search":   0.2,
+    "google_shopping": 0.3,
+    "google_pmax":     0.3,
+    "google_display":  0.6,
+    "google_video":    0.7,
+    "meta_facebook":   0.5,
+    "meta_instagram":  0.5,
+    "meta_other":      0.5
+  },
   "n_bootstrap": 200,
   "pymc_samples": 200,
   "pymc_tune": 100,

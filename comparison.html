@@ -433,25 +433,25 @@
 
   <!-- ── ROI Comparison ── -->
   <div class="section">
-    <div class="section-title">ROI Comparison: Meta Channels</div>
-    <div style="margin-bottom:1.5rem;">
+    <div class="section-title">ROI Comparison — NNLS Model (consistent across rounds)</div>
+    <div style="margin-bottom:1rem;">
       <div class="bar-group">
-        <div class="bar-label">Meta Facebook — mean ROI <span>NNLS × Ridge average</span></div>
+        <div class="bar-label">Meta Facebook <span>revenue per unit spend · NNLS</span></div>
         <div class="bar-track">
-          <div class="bar-fill bar-r3" style="width:42%;">R3: 1.18×</div>
-          <div class="bar-fill bar-r4" style="width:38%;">R4: 1.60×</div>
+          <div class="bar-fill bar-r3" style="width:60%;">R3: 3.00×</div>
+          <div class="bar-fill bar-r4" style="width:35%;">R4: 1.73×</div>
         </div>
       </div>
       <div class="bar-group">
-        <div class="bar-label">Meta Instagram — mean ROI <span>NNLS × Ridge average</span></div>
+        <div class="bar-label">Meta Instagram <span>revenue per unit spend · NNLS</span></div>
         <div class="bar-track">
-          <div class="bar-fill bar-r3" style="width:52%;">R3: 1.44×</div>
-          <div class="bar-fill bar-r4" style="width:56%;">R4: 1.99×</div>
+          <div class="bar-fill bar-r3" style="width:79%;">R3: 3.97×</div>
+          <div class="bar-fill bar-r4" style="width:53%;">R4: 2.67×</div>
         </div>
       </div>
     </div>
     <div class="warning-box">
-      <strong>Important:</strong> Per the knowledge layer — low MAPE does not validate ROAS estimates. These ROI values represent directional signal, not ground truth. Cross-model agreement (CV%) is the more reliable quality indicator than the ROI magnitude itself.
+      <strong>Why R4 ROI looks lower:</strong> R3 NNLS had no baseline floor — 100% of revenue was attributed to media, inflating ROI. R4 introduced a 33% organic baseline, so media ROI is more conservative and more realistic. The R4 numbers are more trustworthy, not worse. R3 Ridge ROI was zero due to a coefficient scaling bug fixed in R4 — Ridge is excluded from the R3 comparison for this reason.
     </div>
   </div>
 
@@ -459,27 +459,27 @@
   <div class="section">
     <div class="section-title">Revenue Contribution — NNLS Model</div>
     <div class="bar-group">
-      <div class="bar-label">Meta Facebook <span>% of total attributed revenue</span></div>
+      <div class="bar-label">Meta Facebook <span>% of media-attributed revenue</span></div>
       <div class="bar-track">
-        <div class="bar-fill bar-r3" style="width:43%;">R3: 42.5%</div>
-        <div class="bar-fill bar-r4" style="width:42%;">R4: 41.97%</div>
+        <div class="bar-fill bar-r3" style="width:68%;">R3: 68.0%</div>
+        <div class="bar-fill bar-r4" style="width:42%;">R4: 42.0%</div>
       </div>
     </div>
     <div class="bar-group">
-      <div class="bar-label">Meta Instagram <span>% of total attributed revenue</span></div>
+      <div class="bar-label">Meta Instagram <span>% of media-attributed revenue</span></div>
       <div class="bar-track">
-        <div class="bar-fill bar-r3" style="width:20%;">R3: 20.1%</div>
-        <div class="bar-fill bar-r4" style="width:20%;">R4: 19.96%</div>
+        <div class="bar-fill bar-r3" style="width:28%;">R3: 27.7%</div>
+        <div class="bar-fill bar-r4" style="width:20%;">R4: 20.0%</div>
       </div>
     </div>
     <div class="bar-group">
-      <div class="bar-label">Google Shopping <span>% of total attributed revenue</span></div>
+      <div class="bar-label">Google Shopping <span>% of media-attributed revenue</span></div>
       <div class="bar-track">
-        <div class="bar-fill bar-r3" style="width:5%;">R3: 4.5%</div>
-        <div class="bar-fill bar-r4" style="width:5%;">R4: 4.68%</div>
+        <div class="bar-fill bar-r3" style="width:4%;">R3: 4.4%</div>
+        <div class="bar-fill bar-r4" style="width:5%;">R4: 4.7%</div>
       </div>
     </div>
-    <p style="font-size:.8rem;color:var(--text-3);margin-top:.75rem;">Meta channel contribution is stable across rounds — consistent signal despite adstock parameter changes.</p>
+    <p style="font-size:.8rem;color:var(--text-3);margin-top:.75rem;">R3 NNLS had no organic baseline floor — all revenue was attributed to media (overattribution). R4 applies a 33% organic baseline, so media contribution % is lower but more structurally sound. Meta's relative ranking is unchanged across both rounds.</p>
   </div>
 
   <!-- ── Key Takeaways ── -->

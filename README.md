@@ -1,6 +1,6 @@
 # PrismMMM
 
-**[→ Live Report](https://scarlettqiu.github.io/prismmmm/presentation.html)** · **[→ R3 vs R4 Comparison](https://scarlettqiu.github.io/prismmmm/comparison.html)** · **[→ Dashboard](https://prismmmm-noavdwqyyxace4wktru2m8.streamlit.app/)**
+**[→ Live Report](https://scarlettqiu.github.io/prismmmm/presentation.html)** · **[→ R3 vs R4](https://scarlettqiu.github.io/prismmmm/comparison.html)** · **[→ R3 vs R4 vs R5](https://scarlettqiu.github.io/prismmmm/comparison3.html)** · **[→ Dashboard](https://prismmmm-noavdwqyyxace4wktru2m8.streamlit.app/)**
 
 Autonomous Marketing Mix Modeling powered by Claude. Point an AI agent at `program.md` and it runs **three independent MMM models**, critiques its own analysis through a five-agent loop, iterates on model configuration, and produces a stakeholder report — without human involvement.
 

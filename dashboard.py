@@ -8,7 +8,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
@@ -120,18 +119,18 @@ CHART_LAYOUT = dict(
 
 # ── Data loading ──────────────────────────────────────────────────────────────
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_results(path: str) -> dict:
     return json.loads(Path(path).read_text())
 
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_metadata() -> dict:
     p = Path("metadata.json")
     return json.loads(p.read_text()) if p.exists() else {}
 
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_raw_data(data_path: str) -> pd.DataFrame:
     try:
         return pd.read_csv(data_path)
@@ -139,7 +138,7 @@ def load_raw_data(data_path: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_exploration_report() -> str:
     p = Path("rounds/R01_data_exploration.md")
     return p.read_text() if p.exists() else ""

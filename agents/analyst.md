@@ -19,25 +19,33 @@ Read all four files before writing anything.
 
 ## What to analyse
 
-### 1. Model fit quality
-- Is any model overfit? (R² = 1.0 on small samples is a red flag)
-- Which model has the best test MAPE? That's the most honest fit metric.
-- Note if a model used a fallback (check the `note` field in results JSON)
+### 1. Cross-model agreement (primary evaluation criterion)
+- Check the `cv_pct` and `agreement` columns in roi_comparison.csv **before** reading individual model results
+- CV < 20%: high agreement — these findings are surfaceable with confidence
+- CV 20–50%: moderate agreement — present with caveats
+- CV > 50%: low agreement — do NOT make a budget recommendation for this channel; explain why models diverge (collinearity, spend variation, lag assumptions)
+- A finding is only considered **confirmed** if it holds across at least 2 of 3 models with CV < 50%
 
-### 2. Channel ROI ranking
-- Which channels have the highest mean ROI across models?
-- Which channels appear in the top 3 for 2+ models? (consensus = more trustworthy)
-- Are any ROI values negative? Flag these — they may indicate collinearity or data issues
+### 2. Prior sensitivity (Bayesian robustness)
+- Check if PyMC results shift materially compared to Ridge and LightweightMMM
+- If PyMC ROI for a channel is >2× the Ridge estimate, the Bayesian prior is likely dominating — flag this
+- A channel where PyMC disagrees directionally with both other models should be treated as uncertain regardless of its mean ROI
 
-### 3. Channel contribution
+### 3. Channel ROI ranking
+- Rank channels by **mean ROI across models**, but only highlight channels with CV < 50%
+- Which channels appear in the top 3 for 2+ models? (consensus = surfaceable)
+- Are any ROI values negative? Flag these — likely collinearity or data issues
+
+### 4. Channel contribution
 - What % of GMV is explained by media vs baseline (unattributed)?
 - Are contribution percentages plausible given spend levels?
 
-### 4. Model agreement
-- Check `agreement` column in roi_comparison.csv
-- For channels with CV > 50%, explain WHY models might disagree (collinearity, spend variation, lag assumptions)
+### 5. Model fit quality (supporting context, not headline)
+- Is any model overfit? (R² = 1.0 on small samples is a red flag)
+- Note test MAPE per model as a fit quality indicator — but do not use it to override low CV agreement
+- Note if a model used a fallback (check the `note` field in results JSON)
 
-### 5. Spend efficiency
+### 6. Spend efficiency
 - Which channels give the most revenue per unit spent?
 - Which channels are over-invested relative to their contribution?
 
@@ -50,23 +58,23 @@ Write a file `rounds/R{N:02d}_analysis.md` with these sections:
 ```markdown
 # Round N — Analyst Report
 
-## Model Quality
-[2-3 sentences on fit, overfitting risk, which model to trust most]
+## Confirmed Findings (CV < 50%, cross-model agreement)
+[Bullet list: channel, mean ROI, CV%, appears in top 3 for X/Y models — only include channels with sufficient agreement]
 
-## Top Performing Channels
-[Bullet list: channel, mean ROI, appears in top 3 for X/Y models]
+## Uncertain Channels (CV ≥ 50% or prior sensitivity flagged)
+[Channels where models disagree — explain the likely cause, do not make budget recommendations here]
 
-## Channels to Investigate
-[Channels with negative ROI, high disagreement CV, or near-zero contribution]
+## Contribution & Efficiency
+[Media vs baseline split, most/least efficient channels among confirmed findings only]
 
-## Spend Efficiency Summary
-[1-2 sentences: who is most/least efficient]
+## Model Fit Notes
+[1-2 sentences on MAPE, overfitting flags, fallback models — supporting context]
 
 ## Key Uncertainties
-[Data limitations, collinearity suspects, sample size caveat]
+[Data limitations, collinearity suspects, sample size caveat, prior sensitivity concerns]
 
 ## Preliminary Recommendation
-[1-2 sentences: where to shift budget based on this round's evidence]
+[1-2 sentences: budget direction based only on confirmed findings — explicitly exclude uncertain channels]
 ```
 
 Keep it under 400 words. Be specific — reference actual numbers from the results.

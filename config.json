@@ -29,8 +29,8 @@
     "meta_other":      0.5
   },
   "n_bootstrap": 200,
-  "pymc_samples": 200,
-  "pymc_tune": 100,
+  "pymc_samples": 50,
+  "pymc_tune": 25,
   "holdout_periods": 4,
   "results_dir": "./results",
   "rounds_dir": "./rounds"

@@ -18,18 +18,52 @@ def _mape(y_true, y_pred) -> float:
     return float(np.mean(np.abs((y_true[mask] - y_pred[mask]) / y_true[mask])) * 100)
 
 
+_LWMMM_TIMEOUT_SEC = 120
+
+
+def _subprocess_target(train_dict, test_dict, cfg, queue):
+    """Runs in a child process so we can hard-kill it if JAX hangs."""
+    try:
+        import pandas as pd
+        train_df = pd.DataFrame(train_dict)
+        test_df = pd.DataFrame(test_dict)
+        from lightweight_mmm import lightweight_mmm, preprocessing
+        import jax.numpy as jnp
+        result = _run_lightweight(train_df, test_df, cfg, lightweight_mmm, preprocessing, jnp)
+        queue.put(("ok", result))
+    except Exception as e:
+        queue.put(("err", str(e)))
+
+
 def run(
     train_df: pd.DataFrame,
     test_df: pd.DataFrame,
     cfg: dict,
 ) -> dict:
-    try:
-        from lightweight_mmm import lightweight_mmm, preprocessing
-        import jax.numpy as jnp
-        return _run_lightweight(train_df, test_df, cfg, lightweight_mmm, preprocessing, jnp)
-    except Exception:
-        # ImportError (not installed) or runtime error (JAX API incompatibility)
-        return _run_numpy_fallback(train_df, test_df, cfg)
+    import multiprocessing as mp
+    ctx = mp.get_context("spawn")
+    queue = ctx.Queue()
+    p = ctx.Process(
+        target=_subprocess_target,
+        args=(train_df.to_dict("list"), test_df.to_dict("list"), cfg, queue),
+        daemon=True,
+    )
+    p.start()
+    p.join(timeout=_LWMMM_TIMEOUT_SEC)
+    if p.is_alive():
+        p.kill()
+        p.join()
+        note = f"LightweightMMM/JAX timed out after {_LWMMM_TIMEOUT_SEC}s — used scipy NNLS fallback"
+        result = _run_numpy_fallback(train_df, test_df, cfg)
+        result["note"] = note
+        return result
+    status, payload = queue.get()
+    if status == "ok":
+        return payload
+    note = f"LightweightMMM/JAX error ({payload}) — used scipy NNLS fallback"
+    result = _run_numpy_fallback(train_df, test_df, cfg)
+    result["note"] = note
+    return result
 
 
 def _run_lightweight(train_df, test_df, cfg, lightweight_mmm, preprocessing, jnp) -> dict:
@@ -56,7 +90,7 @@ def _run_lightweight(train_df, test_df, cfg, lightweight_mmm, preprocessing, jnp
         seed=42,
     )
 
-    media_contribution, baseline = mmm.get_contribution_decomposition(media_s)
+    media_contribution, _ = mmm.get_contribution_decomposition(media_s)
     # media_contribution is in scaled target space — multiply by target mean to recover original scale
     # (scaler_target divides by mean, so inverse is multiply by mean)
     target_mean = float(target.mean()) if float(target.mean()) != 0 else 1.0

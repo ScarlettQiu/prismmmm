@@ -16,7 +16,49 @@ def _mape(y_true, y_pred) -> float:
     return float(np.mean(np.abs((y_true[mask] - y_pred[mask]) / y_true[mask])) * 100)
 
 
+_PYMC_TIMEOUT_SEC = 300
+
+
+def _subprocess_target(train_dict, test_dict, cfg, queue):
+    """Runs in a child process so we can hard-kill it if PyTensor hangs."""
+    try:
+        import pandas as pd
+        train_df = pd.DataFrame(train_dict)
+        train_df["date"] = pd.to_datetime(train_df["date"])
+        test_df = pd.DataFrame(test_dict)
+        test_df["date"] = pd.to_datetime(test_df["date"])
+        result = _run_pymc(train_df, test_df, cfg)
+        queue.put(("ok", result))
+    except Exception as e:
+        queue.put(("err", str(e)))
+
+
 def run(
+    train_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    cfg: dict,
+) -> dict:
+    import multiprocessing as mp
+    ctx = mp.get_context("spawn")
+    queue = ctx.Queue()
+    p = ctx.Process(
+        target=_subprocess_target,
+        args=(train_df.to_dict("list"), test_df.to_dict("list"), cfg, queue),
+        daemon=True,
+    )
+    p.start()
+    p.join(timeout=_PYMC_TIMEOUT_SEC)
+    if p.is_alive():
+        p.kill()
+        p.join()
+        return _fallback_pymc(train_df, test_df, cfg, f"PyMC timed out after {_PYMC_TIMEOUT_SEC}s")
+    status, payload = queue.get()
+    if status == "ok":
+        return payload
+    return _fallback_pymc(train_df, test_df, cfg, payload)
+
+
+def _run_pymc(
     train_df: pd.DataFrame,
     test_df: pd.DataFrame,
     cfg: dict,
@@ -60,14 +102,13 @@ def run(
     raw_test  = raw[raw["date"].isin(test_dates)].sort_values("date").reset_index(drop=True)
 
     try:
-        import signal, pytensor
-        pytensor.config.cxx = ""  # suppress g++ warning
-
-        # Time-box the full MMM — pure-Python PyTensor is very slow without g++
-        _MMM_TIMEOUT_SEC = 180
-
-        def _timeout_handler(signum, frame):
-            raise TimeoutError("PyMC MMM sampling timed out")
+        import pytensor
+        # Use clang if available (macOS without g++) — dramatically faster than pure Python
+        import shutil
+        if shutil.which("clang") and not shutil.which("g++"):
+            pytensor.config.cxx = "clang"
+        elif not shutil.which("g++"):
+            pytensor.config.cxx = ""
 
         mmm_kwargs = dict(
             date_column="date",
@@ -83,18 +124,13 @@ def run(
         y_train = raw_train[kpi_col].astype(float)
         X_test  = raw_test.drop(columns=[kpi_col])
 
-        signal.signal(signal.SIGALRM, _timeout_handler)
-        signal.alarm(_MMM_TIMEOUT_SEC)
-        try:
-            mmm.fit(
-                X=X_train, y=y_train,
-                progressbar=False,
-                draws=cfg.get("pymc_samples", 200),
-                tune=cfg.get("pymc_tune", 100),
-                chains=1,
-            )
-        finally:
-            signal.alarm(0)  # cancel alarm
+        mmm.fit(
+            X=X_train, y=y_train,
+            progressbar=False,
+            draws=cfg.get("pymc_samples", 200),
+            tune=cfg.get("pymc_tune", 100),
+            chains=1,
+        )
 
         import numpy as _np
         ppc_train = mmm.sample_posterior_predictive(X_train, combined=True, original_scale=True)
@@ -145,6 +181,11 @@ def _fallback_pymc(train_df, test_df, cfg, original_error: str) -> dict:
     """Simple PyMC Bayesian linear regression as fallback."""
     try:
         import pymc as pm
+        import pytensor, shutil
+        if shutil.which("clang") and not shutil.which("g++"):
+            pytensor.config.cxx = "clang"
+        elif not shutil.which("g++"):
+            pytensor.config.cxx = ""
 
         channels = cfg["media_channels"]
         feat_cols = [f"{ch}_saturated" for ch in channels if f"{ch}_saturated" in train_df.columns]
@@ -161,14 +202,16 @@ def _fallback_pymc(train_df, test_df, cfg, original_error: str) -> dict:
 
         with pm.Model():
             alpha = pm.Normal("alpha", mu=0, sigma=1)
-            betas = pm.HalfNormal("betas", sigma=1, shape=Xs.shape[1])
+            # Normal (not HalfNormal) — allows negative coefficients for channels
+            # with negative true ROI; HalfNormal forces positivity and collapses to zero
+            betas = pm.Normal("betas", mu=0, sigma=1, shape=Xs.shape[1])
             sigma = pm.HalfNormal("sigma", sigma=1)
             mu = alpha + pm.math.dot(Xs, betas)
             pm.Normal("y", mu=mu, sigma=sigma, observed=ys)
             trace = pm.sample(
                 draws=cfg.get("pymc_samples", 500),
                 tune=cfg.get("pymc_tune", 250),
-                chains=2,
+                chains=1,
                 progressbar=False,
                 return_inferencedata=True,
             )

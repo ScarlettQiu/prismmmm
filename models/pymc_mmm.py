@@ -110,11 +110,22 @@ def _run_pymc(
         elif not shutil.which("g++"):
             pytensor.config.cxx = ""
 
+        # Tighter saturation_beta prior: pymc-marketing max-abs-scales channels
+        # internally, so scaled spend is in [0, 1].  Default HalfNormal(1.5) for
+        # saturation_beta allows a single channel to explain up to ~150% of max
+        # KPI, which is prior-dominated for sparse channels (google_shopping).
+        # HalfNormal(0.5) constrains each channel to ~40% of max KPI at saturation,
+        # consistent with what Ridge and BayesianRidge estimate.
+        from pymc_marketing.prior import Prior as _Prior
+        tight_beta_prior = _Prior("HalfNormal", sigma=0.5, dims="channel")
+
         mmm_kwargs = dict(
             date_column="date",
             channel_columns=channel_cols,
             adstock=GeometricAdstock(l_max=cfg.get("adstock_max_lag", 1)),
             saturation=HillSaturation(),
+            model_config={"saturation_beta": tight_beta_prior},
+            sampler_config={"target_accept": 0.9},
         )
         if controls:
             mmm_kwargs["control_columns"] = controls

@@ -1,5 +1,4 @@
 model,train_r2,train_mape,test_mape,status
 ridge,0.3538,39.06%,23.17%,OK
-pymc,0.4435,40.14%,13.34%,"Used fallback Bayesian LM (DelayedSaturatedMMM error: PyMC MMM sampling timed out
-Apply node that caused the error: Composite{...}(Tra)"
-lightweight_mmm,0.3528,43.86%,21.53%,LightweightMMM/JAX timed out after 120s — used scipy NNLS fallback
+pymc,0.7954,23.0%,42.83%,OK
+lightweight_mmm,0.5366,36.32%,15.06%,LightweightMMM/JAX timed out after 120s — used BayesianRidge fallback

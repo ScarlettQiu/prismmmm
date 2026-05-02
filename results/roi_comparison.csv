@@ -1,9 +1,9 @@
 channel,lightweight_mmm,pymc,ridge,has_negative,mean_roi,std_roi,cv_pct,agreement
-meta_other,0.0,-0.0,264.2174,False,88.0725,152.546,173.2,❌ Low
-google_shopping,41.1114,0.0,16.7001,False,19.2705,20.6759,107.3,❌ Low
-google_search,0.0,-0.0,40.0696,False,13.3565,23.1342,173.2,❌ Low
-meta_instagram,2.6735,0.0,1.2977,False,1.3237,1.3369,101.0,❌ Low
-meta_facebook,1.7309,0.0,1.4767,False,1.0692,0.9346,87.4,❌ Low
-google_pmax,0.0,0.0,0.4417,False,0.1472,0.255,173.2,❌ Low
-google_video,0.0,0.0,-4.0132,True,-1.3377,2.317,173.2,⚠️ Negative ROI
-google_display,0.0,0.0,-51.03,True,-17.01,29.4622,173.2,⚠️ Negative ROI
+meta_other,7.5496,1089.6884,264.2174,False,453.8185,565.4357,124.6,❌ Low
+google_shopping,9.5612,230.0525,16.7001,False,85.4379,125.2907,146.6,❌ Low
+google_search,23.3215,48.621,40.0696,False,37.3374,12.8691,34.5,⚠️ Medium
+meta_instagram,1.6533,2.9215,1.2977,False,1.9575,0.8536,43.6,⚠️ Medium
+meta_facebook,1.5975,1.5231,1.4767,False,1.5324,0.0609,4.0,✅ High
+google_video,-22.4064,23.4488,-4.0132,True,-0.9903,23.0766,2330.3,⚠️ Negative ROI
+google_pmax,-12.9722,5.4721,0.4417,True,-2.3528,9.5344,405.2,⚠️ Negative ROI
+google_display,-78.512,95.0974,-51.03,True,-11.4815,93.3173,812.8,⚠️ Negative ROI

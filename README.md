@@ -1,6 +1,6 @@
 # PrismMMM
 
-**[→ Live Report](https://scarlettqiu.github.io/prismmmm/presentation.html)** · **[→ R3 vs R4](https://scarlettqiu.github.io/prismmmm/comparison.html)** · **[→ R3 vs R4 vs R5](https://scarlettqiu.github.io/prismmmm/comparison3.html)** · **[→ Dashboard](https://prismmmm-noavdwqyyxace4wktru2m8.streamlit.app/)**
+**[→ Live Report (R10)](https://scarlettqiu.github.io/prismmmm/presentation.html)** · **[→ R9 vs R10](https://scarlettqiu.github.io/prismmmm/comparison.html)** · **[→ R8 vs R9 vs R10](https://scarlettqiu.github.io/prismmmm/comparison3.html)** · **[→ Dashboard](https://prismmmm-noavdwqyyxace4wktru2m8.streamlit.app/)**
 
 Autonomous Marketing Mix Modeling powered by Claude. Point an AI agent at `program.md` and it runs **three independent MMM models**, critiques its own analysis through a five-agent loop, iterates on model configuration, and produces a stakeholder report — without human involvement.
 
@@ -234,36 +234,37 @@ python discover.py --source bigquery \
 
 ---
 
-## What Four Rounds Revealed
+## What Ten Rounds Revealed
 
-Each round the agent tried one config change and the Critic evaluated whether the results were trustworthy. Here is what happened:
+Each round the agent tried one change and the Critic evaluated whether the results were trustworthy. Here is what happened:
 
 | Round | Change | Best MAPE | Key Finding |
 |---|---|---|---|
-| 1 | Baseline | 23.21% | Data Explorer flagged 5 KPI anomalies, 76% zero-spend on Google Shopping |
-| 2 | `adstock_max_lag` 2 → 1 | 20.39% | Short lag better for digital channels — MAPE improved 2.8pp |
-| 3 | `hill_ec` 0.5 → 0.3 | 13.05% | Lower saturation threshold unlocked attribution — MAPE improved 7.3pp |
-| 4 | Per-channel adstock decays (from Notion) | 13.12% | **Meta Facebook achieved ✅ High cross-model agreement (CV 71% → 7.9%)** for the first time |
+| 1 | Baseline | 23.2% | Data Explorer: 5 KPI anomalies, 76% zero-spend on Google Shopping |
+| 2 | `adstock_max_lag` 2 → 1 | 20.4% | Short lag better for digital — MAPE improved 2.8pp |
+| 3 | `hill_ec` 0.5 → 0.3 | 13.1% | Lower saturation unlocked attribution — MAPE improved 7.3pp |
+| 4 | Per-channel adstock decays (from Notion) | 13.1% | **Meta Facebook first ✅ High agreement (CV 71% → 7.9%)** |
+| 5 | Code review — PyMC axis bug + NNLS scaling fix | 14.1% | Two real statistical bugs caught and fixed |
+| 6 | PyMC samples 50 → 500 | 13.3% | Posterior stability improved; meta_facebook held at CV < 20% |
+| 7 | Full PyMC (clang++ C compiler enabled) | 15.1% | All three models now run properly; meta_facebook CV 7.9% confirmed |
+| 8 | BayesianRidge replaces NNLS (y-standardisation) | 15.1% | BayesianRidge best test MAPE (15.1%); over-attribution bug exposed |
+| 9 | BayesianRidge attribution cap (65% of KPI) | 15.1% | **meta_facebook re-confirmed at CV 4.5%** after cap fixed over-attribution |
+| 10 | PyMC `saturation_beta` HalfNormal(1.5→0.5) | 15.1% | **google_search first Google channel below CV 50% (28.1%)** |
 
-### Why Round 4 mattered
+### Three milestones that mattered
 
-Rounds 1–3 used a single global adstock decay of 0.4 for all channels. But paid search decays in days (intent-driven), while video builds brand awareness over weeks. Applying a uniform decay rate misrepresents how different media types carry over — and the models can't figure this out from data alone.
+**Round 4 — Notion knowledge layer** unlocked meta_facebook. Rounds 1–3 used a single global adstock decay of 0.4. Paid search decays in days; video builds over weeks. The Tuner applied domain-informed decay rates from Notion and meta_facebook's cross-model disagreement dropped from CV=71% to CV=7.9% in one round — knowledge the model could not derive from 132 data rows alone.
 
-Round 4 connected a **Notion knowledge layer** via MCP. Business context was added to Notion (per-channel decay benchmarks, purchase cycle, seasonality) and `discover.py` pulled it into `metadata.json` automatically at the start of the round. The Tuner then applied the domain-informed decay rates:
+**Round 9 — BayesianRidge attribution cap** restored reliability after round 8's over-attribution. BayesianRidge's negative-coefficient channels were offsetting each other and inflating positive channel contributions above 100% of KPI. Capping total positive media attribution at 65% of KPI fixed the artefact, and meta_facebook settled at CV 4.5% across all three models.
 
-```json
-"channel_adstock_decays": {
-  "google_search":   0.2,   ← intent-driven, decays in days
-  "google_video":    0.7,   ← brand building, multi-week carryover
-  "google_display":  0.6,   ← awareness, medium carryover
-  "meta_facebook":   0.5,   ← social, 2–3 week carryover
-  "meta_instagram":  0.5
-}
-```
+**Round 10 — PyMC prior tightening** unlocked the first Google signal. The default `saturation_beta ~ HalfNormal(1.5)` allowed PyMC to assign any channel up to 150% of max KPI — prior-dominated and unconstrained by data. Tightening to `HalfNormal(0.5)` brought google_search's PyMC estimate from 100.6× to 48.6×, within 1.2× of Ridge. Google Search crossed below CV 50% for the first time in 10 rounds.
 
-Result: Meta Facebook's cross-model disagreement dropped from CV=71% to CV=7.9% — the first channel to reach ✅ High agreement across models. This is domain knowledge the model could not derive from 132 rows of data on its own.
+**Current confirmed findings (Round 10):**
+- **meta_facebook**: CV 3.2% ✅ — Ridge 1.48× · PyMC 1.52× · BayesianRidge 1.60× — maintained or increase budget
+- **meta_instagram**: CV 35.6% ⚠️ — directionally positive across all models, improving each round
+- **google_search**: CV 28.1% ⚠️ — first cross-model signal; high ROI reflects demand capture, not creation
 
-**See the full comparison:** [Round 3 vs Round 4](https://scarlettqiu.github.io/prismmmm/comparison.html)
+**See the full comparison:** [Round 9 vs Round 10](https://scarlettqiu.github.io/prismmmm/comparison.html) · [R8/R9/R10](https://scarlettqiu.github.io/prismmmm/comparison3.html)
 
 ---
 
@@ -295,9 +296,9 @@ When all three rank the same channel as top performer, you can act. When they di
 |---|---|---|---|
 | **Ridge** | Regularised regression + bootstrap (200 samples) | Confidence intervals | sklearn only |
 | **PyMC** | Full Bayesian with DelayedSaturatedMMM | Posterior distribution | `pip install pymc-marketing` |
-| **LightweightMMM** | Google's JAX-based Hill + adstock | Posterior samples | `pip install lightweight_mmm` |
+| **LightweightMMM** | BayesianRidge fallback (JAX unavailable on macOS M-series) | Regularised estimates | `pip install scikit-learn` |
 
-Ridge always runs with no extra dependencies. LightweightMMM and PyMC fall back to scipy NNLS only if JAX / pymc-marketing are not installed.
+Ridge always runs with no extra dependencies. LightweightMMM falls back to BayesianRidge (sklearn) when JAX is unavailable — BayesianRidge with y-standardisation and an attribution cap produces reliable channel estimates. PyMC falls back to a simple Bayesian LM if pymc-marketing is not installed.
 
 ---
 
@@ -327,14 +328,15 @@ Reads model output + EDA report. Covers ROI rankings, model agreement/disagreeme
 ### Critic
 **Role:** Quality gate — challenges the Analyst before anything reaches the report.
 
-Runs six checks. Issues `REVISE` with a specific reason if any check fails. Analyst fixes once, Critic re-reviews. Max one revision cycle — no infinite loops.
+Runs seven checks. Issues `REVISE` with a specific reason if any check fails. Analyst fixes once, Critic re-reviews. Max one revision cycle — no infinite loops.
 
 | Check | What it catches |
 |---|---|
-| **Overfitting** | R²=1.0 on small samples |
+| **Cross-model agreement** | CV > 50% on a recommended channel — primary gate |
+| **Prior sensitivity** | PyMC ROI >2× Ridge without explanation |
+| **Overfitting** | R²=1.0 on small samples; test MAPE >30% unacknowledged |
 | **Sign correctness** | Negative ROI despite confirmed spend |
 | **Contribution plausibility** | Media <5% or >80% of KPI |
-| **Consensus honesty** | Analyst ignored model disagreements |
 | **Collinearity** | Channels that co-moved, confusing attribution |
 | **Sample size caveat** | Limitation not clearly communicated |
 

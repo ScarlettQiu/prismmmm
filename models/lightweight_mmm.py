@@ -187,6 +187,19 @@ def _run_numpy_fallback(train_df: pd.DataFrame, test_df: pd.DataFrame, cfg: dict
         col_idx = present_cols.index(col)
         channel_contribs[ch] = float((coefs[col_idx] * X_train[:, col_idx]).sum())
 
+    # Cap positive media attribution at a plausible ceiling (default 65% of total KPI).
+    # BayesianRidge can over-attribute when negative-coefficient channels offset each
+    # other, inflating positive channel contributions beyond physically possible levels.
+    max_media_pct = float(cfg.get("bayesian_ridge_max_media_pct", 0.65))
+    pos_total = sum(v for v in channel_contribs.values() if v > 0)
+    cap = max_media_pct * total_kpi
+    if pos_total > cap:
+        scale = cap / pos_total
+        channel_contribs = {
+            ch: v * scale if v > 0 else v
+            for ch, v in channel_contribs.items()
+        }
+
     roi = {}
     for ch in valid_channels:
         spend = train_df[f"{ch}_adstock"].sum() if f"{ch}_adstock" in train_df.columns else 1

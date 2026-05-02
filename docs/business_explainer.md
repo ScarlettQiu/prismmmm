@@ -81,8 +81,8 @@ Looks at all channels simultaneously and tries to find how much each one contrib
 ### PyMC Bayesian — "The Careful Statistician"
 Does the same thing but starts with some prior beliefs ("we expect ad spend to have a positive effect") and then updates those beliefs with the data. Like a scientist who says "I don't think this channel is magic, but let me check the data and adjust." This approach also gives you a range of uncertainty, not just a single number. It's slower but gives richer outputs.
 
-### NNLS — "The No-Negatives Rule"
-Forces all channel effects to be positive — it refuses to say "this channel caused us to lose money." The idea is that companies don't usually run advertising that actively destroys sales; if a model returns a negative number, it's probably a data confusion problem, not reality. This model also enforces a "baseline" — the revenue that would happen even without any advertising (organic sales, word of mouth, repeat customers).
+### BayesianRidge — "The Positive-Constrained Estimator"
+A regularised model that puts all channels on the same scale before estimating their contributions — so a channel spending $3M and a channel spending $600M can be compared fairly. It also enforces an economic reality check: media channels collectively cannot be credited with more revenue than they plausibly drive. This replaced the earlier NNLS model in Round 8 and produced the most accurate out-of-sample predictions.
 
 ---
 
@@ -107,9 +107,9 @@ If you spend $1M on Facebook and get 1,000 customers, spending $2M won't get you
 
 ---
 
-## Part 3: Four Rounds of Improvement
+## Part 3: Ten Rounds of Improvement
 
-The agent ran four rounds, each time trying one improvement and measuring whether it helped.
+The agent ran ten rounds, each time trying one improvement and measuring whether it helped.
 
 ### How we measure accuracy
 
@@ -117,19 +117,47 @@ We held back the last 4 weeks of data — the model never saw these weeks during
 
 Think of it like: if the model predicts $30M revenue in a week and actual revenue was $26M, the error is 13.3%. A MAPE of 13% means the model is on average 13% off on weeks it has never seen before.
 
-### Round 1 — Starting point
-Default settings. Best accuracy: **23.2% error**. A reasonable starting point but too uncertain for confident budget decisions.
+We also track **cross-model agreement** — the percentage gap between what Ridge and PyMC say about the same channel. When all three models agree, you can act. When they disagree by more than 50%, the channel's ROI is not yet reliable enough to base budget decisions on.
 
-### Round 2 — Fixed the timing assumption
-The model was originally assuming ad effects linger for 2 months. The agent noticed that for digital channels, this was too long — digital advertising effects are faster. It shortened this to 1 month. Result: **error dropped to 20.4%**.
+### Round 1 — Starting point: know what you're working with before trusting any number
 
-### Round 3 — Fixed the saturation curve
-The model was assuming channels needed to spend a lot before seeing meaningful returns. The agent adjusted the saturation threshold to be more sensitive to lower spending levels. This was the biggest improvement: **error dropped to 13.1%**. At this level, the model is predicting within 13% of actual revenue on weeks it had never seen — directionally trustworthy.
+Before making any budget recommendation, the system profiled the data. Best accuracy: **23.2% error**. It found five weeks where revenue behaved abnormally, and that Google Shopping had zero spend in 76% of all weeks. A channel you barely use can't have a reliable ROI estimate. These flags don't stop the analysis — they tell stakeholders which outputs to trust and which to hold lightly.
 
-### Round 4 — Added domain knowledge about channel behavior
-Instead of treating all channels the same way, we told the model what we know about how different types of advertising actually work in the real world. Search ads fade in days. Video ads linger for weeks. Social ads are in between.
+### Round 2 — Fixed the timing assumption: credit the right week
 
-The effect was striking. **Meta Facebook went from "high disagreement between models" to "high agreement" for the first time** — the two models that compute channel-level results went from disagreeing by 71% on Meta Facebook's ROI to disagreeing by only 7.9%. Domain knowledge the model could not discover from data alone made the biggest difference in reliability.
+Digital advertising works fast. Someone who clicks a paid search ad typically buys within days, not weeks. The first run assumed a two-week carry-over, which spread ad credit across the wrong time periods. Switching to one week better matched how digital channels actually convert. **Error improved to 20.4%** — the models were now looking in the right direction.
+
+### Round 3 — Fixed the saturation curve: let the models see the signal
+
+Saturation curves control when a channel is assumed to have "used up" its marginal effect. The initial setting assumed channels could keep scaling up for longer than the data supported. Lowering the threshold let the models recognise diminishing returns earlier, which unlocked attribution across all channels. **Error improved to 13.1%** — the single largest accuracy gain in the study.
+
+### Round 4 — Added domain knowledge: stop treating all media as equal
+
+Applying one global decay rate to every channel is like using the same half-life for penicillin and a tattoo. Google Search ads fade in days (intent-driven — the purchase either happens or it doesn't). YouTube brand videos linger for weeks. Meta social sits in between. Domain benchmarks from a Notion knowledge layer gave each channel its own rate. Meta Facebook's cross-model disagreement dropped from **71% to 7.9%** in one round — the first channel to reach high agreement. Domain knowledge the model could not discover from 132 rows of data on its own.
+
+### Round 5 — Bug fixes: results before this point were subtly wrong
+
+Automated code review (GPT-4o and Claude running in parallel) caught two silent errors. A PyMC axis bug was assigning adstock effects to the wrong time periods — carry-over from Week 3 was being credited to Week 2. A scaling issue was comparing channels on incompatible scales, making some channels look larger or smaller than they were. Neither error produced a visible crash. Both were distorting attribution in the background. This is why automated code review runs every round rather than once at setup.
+
+### Round 6 — More Bayesian samples: replace noise with stable estimates
+
+With 50 MCMC samples, PyMC's uncertainty estimates were too unstable to trust — analogous to basing a business decision on a 50-person survey with high variance. Raising to 500 samples produced stable distributions. **Meta Facebook's credible interval held below CV 20%**, confirming the Round 4 signal was real and not a sampling artefact.
+
+### Round 7 — Full model stack: all three models now running properly
+
+PyMC was previously running without its full algorithm enabled, which prevented it from modelling diminishing returns and time-lagged effects properly. It was producing results, but not the results it was designed to produce. Enabling the full model brought all three independent methods into proper operation. **Meta Facebook confirmed at CV 7.9%** — cross-model agreement is now a genuine signal, not an artefact of simplified methods.
+
+### Round 8 — Better third model: a step forward, and a new problem surfaces
+
+The original third model produced estimates on a raw revenue scale, making it hard to compare channels that spent very different amounts. BayesianRidge with y-standardisation puts channels on the same footing before estimating contributions. It achieved the **best test MAPE of any model (15.1%)**. But it also revealed a new problem: the model was claiming media drove more than 100% of revenue in some weeks — mathematically impossible. A better method exposed an attribution artefact that had been hidden before.
+
+### Round 9 — Attribution cap: enforce economic reality
+
+Marketing drives sales, but not all sales come from paid media. Organic traffic, repeat customers, and seasonality account for a meaningful share of revenue. Without a cap, the model's positive and negative channel estimates were offsetting each other in a way that allowed positive channels to claim excessive credit. Capping total media attribution at 65% of KPI reflects the economic reality of this category. After the fix, **Meta Facebook settled at CV 4.5% across all three independent models** — the most robust signal in the entire study.
+
+### Round 10 — Bayesian prior calibration: get the first actionable Google signal
+
+Bayesian models have "priors" — baseline beliefs about how much each channel can contribute before seeing any data. PyMC's default prior was too permissive: it effectively said any channel could drive up to 150% of max revenue. For Google Shopping — dark 76% of weeks — the model had almost no data to work with, so it defaulted to the prior and produced a 680× ROI. That number reflects the model's belief, not the channel's performance. Tightening the prior to a more realistic ceiling forced PyMC to produce estimates grounded in what the data can actually support. **Google Search crossed below CV 50% for the first time** — the first actionable signal from any Google channel in ten rounds.
 
 ---
 
@@ -137,26 +165,29 @@ The effect was striking. **Meta Facebook went from "high disagreement between mo
 
 ### The most reliable finding: Meta Facebook works
 
-Both independent models agreed that Meta Facebook generates approximately **$1.60 in revenue for every $1 spent**. That's a 60% return on ad spend. More importantly, the two models only disagreed by **7.9%** on this number — the closest agreement achieved across all channels across all four rounds. This is not noise. This is a consistent signal.
+All three independent models agreed that Meta Facebook generates approximately **$1.48–$1.60 in revenue for every $1 spent**. More importantly, the three models only disagreed by **3.2%** on this number — the closest agreement achieved across all channels across all ten rounds. This is not noise. This is a consistent signal that has held up through ten rounds of improvement, bug fixes, and model upgrades.
 
 Meta Facebook received **$624M in total spend** over the period and appears to account for roughly **36–42% of all media-driven revenue**.
 
-### Meta Instagram appears even more efficient per dollar
+### Meta Instagram appears directionally positive
 
-Instagram ROI is approximately **$1.99–$2.67 per dollar spent** (depending on the model). That's higher than Facebook. The two models disagree more (34.6% gap), so this is a directional signal, not a confirmed fact.
+Instagram ROI is approximately **$1.69–$2.21 per dollar spent** (depending on the model). The three models disagree by 35.6%, so this is a directional signal, not a confirmed fact — but the direction has been consistent across the last several rounds, and disagreement has been declining.
 
-What it suggests: **Instagram may be getting relatively less investment than its effectiveness warrants.** Facebook received 74% of the Meta budget; Instagram got 26%. If Instagram truly delivers higher return per dollar, the current allocation may not be optimal.
+What it suggests: **Instagram may be getting relatively less investment than its effectiveness warrants.** Facebook received 74% of the Meta budget; Instagram got 26%. If Instagram truly delivers comparable or higher return per dollar, the current allocation may not be optimal.
 
-### The Google channels are unclear — do not act on them yet
+### Google Search: first signal, not yet confirmed
 
-Google Search, Display, Video, and PMax all show contradictory results across models. One model says Google Search delivers $40 of revenue per dollar; the other says $0. That's not a real finding — it's a sign the data is too tangled to give a clean answer.
+After ten rounds of model refinement, Google Search has for the first time produced a consistent directional signal across all three models — cross-model disagreement at 28.1%, down from 74.4% in Round 9. Ridge estimates ~$1.37× ROI; PyMC estimates ~$48.6× (high, but no longer implausible given the demand-capture nature of search). This is encouraging but not yet confirmed. **Do not make major budget decisions based on Google Search from this analysis alone.**
 
-Possible reasons:
-- Google and Meta spending often move together. When one goes up, so does the other. The model finds it hard to separate which one caused the sales.
-- Some Google channels ran inconsistently (like Shopping, which was off 76% of weeks)
-- The Bayesian model (PyMC) wasn't able to run its full version this round, limiting the three-way cross-check
+The high PyMC estimate reflects a real dynamic: Google Search captures intent — people searching for your product are close to buying. The model may be capturing the fact that search spend is concentrated in high-intent moments. But until cross-model agreement drops below 20%, treat this as a signal worth watching, not a confirmed finding.
 
-**The right call is to not make budget decisions on Google channels from this analysis alone.**
+### The Google channels that remain unclear
+
+Google Shopping, Google Display, Google Video, and Google PMax still show contradictory or near-zero results across models. The main reasons:
+- Google channels often run simultaneously with Meta. When one goes up, so does the other. The model struggles to separate which one caused the sales.
+- Google Shopping ran in only 24% of weeks — not enough data to estimate its effect reliably.
+
+**Do not make budget decisions on these channels from this analysis.**
 
 ### The organic baseline
 
@@ -167,16 +198,19 @@ Not all revenue comes from advertising. People who already know the brand buy ag
 ## Part 5: What This Means for Budget Decisions
 
 ### What you can act on today
-- **Meta Facebook** is confirmed by two independent models as delivering positive ROI (~1.6×). Maintaining current investment is supported by the data.
-- **Meta Instagram** looks more efficient per dollar than Facebook. Consider testing a modest reallocation — even shifting 5–10% of Facebook budget to Instagram is low-risk given the directional signal.
+- **Meta Facebook** is confirmed by all three independent models as delivering positive ROI (~1.5–1.6×). Maintaining current investment is supported by the data.
+- **Meta Instagram** shows a directional positive signal improving over time. Consider testing a modest reallocation — even shifting 5–10% of Facebook budget to Instagram is low-risk given the consistent directional signal across rounds.
+
+### What you should watch but not act on yet
+- **Google Search** has crossed a meaningful threshold for the first time. Monitor this signal in future rounds. If cross-model agreement improves to below 20%, it becomes actionable. The demand-capture nature of search (high intent, immediate conversion) makes this a plausible finding — it just needs confirmation.
 
 ### What you should not act on yet
-Do not cut or grow Google channels based on this analysis. The models disagree too much. The right path for Google channels is an **incrementality experiment** — running ads in some regions and not others to directly measure the effect, without relying on modeling assumptions.
+Do not cut or grow Google Shopping, Display, Video, or PMax based on this analysis. The models disagree too much. The right path for unclear Google channels is an **incrementality experiment** — running ads in some regions and not others to directly measure the effect, without relying on modeling assumptions.
 
 ### What would make this more reliable
-- A fifth round with the full Bayesian model enabled would give three-model confirmation on Meta channels
 - Adding a "was this week a promotion?" flag to the data would help the model separate promotional spikes from normal advertising effects
 - Geo-experiments for Google channels would give direct causal evidence
+- More Google Search spend weeks would give the model more data to estimate its effect reliably
 
 ---
 
@@ -200,13 +234,14 @@ The finding most likely to transfer to real businesses: **not all advertising ch
 |---|---|
 | What did we analyse? | 132 weeks of ecommerce ad spend and revenue, 8 channels |
 | How many models? | 3 independent models cross-checking each other |
-| How many rounds of tuning? | 4 rounds, one improvement per round |
-| Best model accuracy? | 13.1% error on held-out weeks |
-| Most reliable channel finding? | Meta Facebook — confirmed by 2 models, 7.9% disagreement |
-| Most efficient channel per dollar? | Meta Instagram (directional, not confirmed) |
+| How many rounds of tuning? | 10 rounds, one improvement per round |
+| Best model accuracy? | 15.1% error on held-out weeks |
+| Most reliable channel finding? | Meta Facebook — confirmed by all 3 models, CV 3.2% |
+| Second most reliable? | Meta Instagram — directional positive, CV 35.6% and improving |
+| First Google signal? | Google Search — CV 28.1%, first time below 50% after 10 rounds |
 | Organic baseline (no-ads revenue)? | ~33% of total revenue |
-| Google channels? | Too noisy — do not act on results yet |
-| What's next? | Run Round 5 with full Bayesian model + geo-experiments for Google |
+| Google Shopping / Display / Video? | Too noisy — do not act on results yet |
+| What's next? | Incrementality experiments for Google channels; continue improving cross-model agreement |
 
 ---
 

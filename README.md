@@ -251,13 +251,47 @@ Each round the agent tried one change and the Critic evaluated whether the resul
 | 9 | BayesianRidge attribution cap (65% of KPI) | 15.1% | **meta_facebook re-confirmed at CV 4.5%** after cap fixed over-attribution |
 | 10 | PyMC `saturation_beta` HalfNormal(1.5→0.5) | 15.1% | **google_search first Google channel below CV 50% (28.1%)** |
 
-### Three milestones that mattered
+### What each round unlocked for the business
 
-**Round 4 — Notion knowledge layer** unlocked meta_facebook. Rounds 1–3 used a single global adstock decay of 0.4. Paid search decays in days; video builds over weeks. The Tuner applied domain-informed decay rates from Notion and meta_facebook's cross-model disagreement dropped from CV=71% to CV=7.9% in one round — knowledge the model could not derive from 132 data rows alone.
+**Round 1 — Baseline: know what you're working with before trusting any number**
 
-**Round 9 — BayesianRidge attribution cap** restored reliability after round 8's over-attribution. BayesianRidge's negative-coefficient channels were offsetting each other and inflating positive channel contributions above 100% of KPI. Capping total positive media attribution at 65% of KPI fixed the artefact, and meta_facebook settled at CV 4.5% across all three models.
+Before making any budget recommendation, the system profiled the data. It found five weeks where revenue behaved abnormally (August anomaly), and that Google Shopping had zero spend in 76% of all weeks. A channel you barely use can't have a reliable ROI estimate. These flags don't stop the analysis — they tell stakeholders which outputs to trust and which to hold lightly.
 
-**Round 10 — PyMC prior tightening** unlocked the first Google signal. The default `saturation_beta ~ HalfNormal(1.5)` allowed PyMC to assign any channel up to 150% of max KPI — prior-dominated and unconstrained by data. Tightening to `HalfNormal(0.5)` brought google_search's PyMC estimate from 100.6× to 48.6×, within 1.2× of Ridge. Google Search crossed below CV 50% for the first time in 10 rounds.
+**Round 2 — Shorter adstock lag: credit the right week**
+
+Digital advertising works fast. Someone who clicks a paid search ad typically buys within days, not weeks. The first run assumed two-week carry-over, which spread ad credit across the wrong time periods. Switching to one week better matched how digital channels actually convert. MAPE improved 2.8pp — the models were now looking in the right direction.
+
+**Round 3 — Lower saturation: let the models see the signal**
+
+Saturation curves control when a channel is assumed to have "used up" its marginal effect. The initial setting assumed channels could keep scaling up for longer than the data supported. Lowering the threshold let the models recognise diminishing returns earlier, which unlocked attribution across all channels. MAPE improved 7.3pp in one step — the single largest accuracy gain in the study.
+
+**Round 4 — Channel-specific decay rates: stop treating all media as equal**
+
+Applying one global decay rate to every channel is like using the same half-life for penicillin and a tattoo. Google Search ads fade in days (intent-driven — the purchase either happens or it doesn't). YouTube brand videos linger for weeks. Meta social sits in between. Domain benchmarks from the Notion knowledge layer gave each channel its own rate. Meta Facebook's cross-model disagreement dropped from 71% to 7.9% in one round — the first channel to reach high agreement. Domain knowledge the model could not discover from 132 rows of data on its own.
+
+**Round 5 — Bug fixes: results before this point were subtly wrong**
+
+Automated code review (GPT-4o + Claude in parallel) caught two silent errors. A PyMC axis bug was assigning adstock effects to the wrong time periods — carry-over from Week 3 was being credited to Week 2. An NNLS scaling issue was comparing channels on incompatible scales, making spend volumes look larger or smaller than they were. Neither error produced a visible crash. Both were distorting attribution in the background. This is why automated code review runs every round rather than once at setup.
+
+**Round 6 — More Bayesian samples: replace noise with stable estimates**
+
+With 50 MCMC samples, PyMC's uncertainty estimates were too unstable to trust — analogous to basing a business decision on a 50-person survey with high variance. Raising to 500 samples produced stable posterior distributions. Meta Facebook's credible interval held below CV 20%, confirming the Round 4 signal was real and not a sampling artefact.
+
+**Round 7 — Full model stack: all three models now run their intended methodology**
+
+PyMC was previously running without its C compiler, which disabled the full Hill saturation and delayed adstock modelling. It was producing results, but not the results it was designed to produce. Enabling the compiler activated the complete `DelayedSaturatedMMM` — the model that captures diminishing returns and time-lagged effects properly. Now all three independent models ran their actual algorithms. Cross-model agreement became a genuine signal, not an artefact of simplified methods.
+
+**Round 8 — BayesianRidge with y-standardisation: a better third model, but a new problem surfaces**
+
+The original NNLS fallback for LightweightMMM produced estimates on a raw revenue scale, making it hard to compare channels with different spend volumes. BayesianRidge with y-standardisation puts channels on the same footing before estimating contributions. It achieved the best test MAPE of any model (15.1%). But it also revealed a new problem: the model was claiming media drove more than 100% of revenue in some weeks — mathematically impossible. A better method exposed an attribution artefact that had been hidden before.
+
+**Round 9 — Attribution cap: enforce economic reality**
+
+Marketing drives sales, but not all sales come from paid media. Organic traffic, repeat customers, and seasonality account for a meaningful share of revenue. Without a cap, BayesianRidge's positive and negative channel coefficients were offsetting each other in a way that allowed positive channels to claim excessive credit. Capping total media attribution at 65% of KPI reflects the economic reality of this category. After the fix, Meta Facebook settled at CV 4.5% across all three independent models — the most robust signal in the entire study.
+
+**Round 10 — PyMC prior calibration: get the first actionable Google signal**
+
+Bayesian models have "priors" — baseline beliefs about how much each channel can contribute before seeing any data. PyMC's default prior was too permissive: it effectively said any channel could drive up to 150% of max revenue. For Google Shopping — dark 76% of weeks — the model had almost no data to work with, so it defaulted to the prior and produced a 680× ROI. That number reflects the model's belief, not the channel's performance. Tightening the prior to a more realistic ceiling forced PyMC to produce estimates grounded in what the data can actually support. Google Search crossed below CV 50% for the first time — the first actionable signal from any Google channel in ten rounds.
 
 **Current confirmed findings (Round 10):**
 - **meta_facebook**: CV 3.2% ✅ — Ridge 1.48× · PyMC 1.52× · BayesianRidge 1.60× — maintained or increase budget

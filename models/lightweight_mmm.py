@@ -23,6 +23,8 @@ _LWMMM_TIMEOUT_SEC = 120
 
 def _subprocess_target(train_dict, test_dict, cfg, queue):
     """Runs in a child process so we can hard-kill it if JAX hangs."""
+    import os
+    os.environ.setdefault("JAX_PLATFORMS", "cpu")  # avoid Metal/GPU init hang on macOS
     try:
         import pandas as pd
         train_df = pd.DataFrame(train_dict)
@@ -53,14 +55,14 @@ def run(
     if p.is_alive():
         p.kill()
         p.join()
-        note = f"LightweightMMM/JAX timed out after {_LWMMM_TIMEOUT_SEC}s — used scipy NNLS fallback"
+        note = f"LightweightMMM/JAX timed out after {_LWMMM_TIMEOUT_SEC}s — used BayesianRidge fallback"
         result = _run_numpy_fallback(train_df, test_df, cfg)
         result["note"] = note
         return result
     status, payload = queue.get()
     if status == "ok":
         return payload
-    note = f"LightweightMMM/JAX error ({payload}) — used scipy NNLS fallback"
+    note = f"LightweightMMM/JAX error ({payload}) — used BayesianRidge fallback"
     result = _run_numpy_fallback(train_df, test_df, cfg)
     result["note"] = note
     return result
@@ -137,8 +139,14 @@ def _run_lightweight(train_df, test_df, cfg, lightweight_mmm, preprocessing, jnp
 
 
 def _run_numpy_fallback(train_df: pd.DataFrame, test_df: pd.DataFrame, cfg: dict) -> dict:
-    """Numpy MMM with non-negative least squares — no JAX needed."""
-    from scipy.optimize import nnls
+    """BayesianRidge MMM fallback — used when JAX/LightweightMMM is unavailable.
+
+    Uses sklearn BayesianRidge with automatic hyperparameter tuning via evidence
+    maximisation. Allows negative coefficients (unlike NNLS), giving meaningful
+    attribution for negative-ROI channels. Provides a statistically independent
+    third estimate for the CV ensemble.
+    """
+    from sklearn.linear_model import BayesianRidge
 
     channels = cfg["media_channels"]
     feat_cols = [f"{ch}_saturated" for ch in channels if f"{ch}_saturated" in train_df.columns]
@@ -148,23 +156,22 @@ def _run_numpy_fallback(train_df: pd.DataFrame, test_df: pd.DataFrame, cfg: dict
     all_cols = feat_cols + ctrl_cols + ["trend"]
     present_cols = [c for c in all_cols if c in train_df.columns]
 
-    X_train = np.column_stack([train_df[c].values for c in present_cols]) if present_cols else np.ones((len(train_df), 1))
-    X_test  = np.column_stack([test_df[c].values  for c in present_cols if c in test_df.columns]) if present_cols else np.ones((len(test_df), 1))
+    X_train = np.column_stack([train_df[c].values for c in present_cols])
+    X_test  = np.column_stack([test_df[c].values  for c in present_cols if c in test_df.columns])
     y_train = train_df["kpi"].values.astype(float)
     y_test  = test_df["kpi"].values.astype(float)
 
-    # Enforce a minimum organic baseline so NNLS cannot attribute 100% of revenue
-    # to paid media.  baseline_fraction (default 40%) of mean weekly KPI is reserved
-    # as organic/baseline before NNLS sees the data.
-    baseline_fraction = float(cfg.get("nnls_baseline_fraction", 0.40))
-    baseline_floor = baseline_fraction * float(y_train.mean())
-    y_nnls = np.maximum(y_train - baseline_floor, 0.0)
+    # Standardise y so BayesianRidge's automatic regularisation isn't overwhelmed
+    # by the scale difference between X (Hill-saturated, 0–1) and y (raw revenue, millions)
+    y_mean, y_std = y_train.mean(), y_train.std() + 1e-8
+    ys_train = (y_train - y_mean) / y_std
 
-    # Non-negative least squares on incremental revenue only
-    coefs, _ = nnls(X_train, y_nnls)
+    model = BayesianRidge(max_iter=500, tol=1e-4)
+    model.fit(X_train, ys_train)
+    coefs = model.coef_ * y_std  # rescale to original revenue units
 
-    y_pred_train = X_train @ coefs + baseline_floor
-    y_pred_test  = X_test  @ coefs + baseline_floor
+    y_pred_train = model.predict(X_train) * y_std + y_mean
+    y_pred_test  = model.predict(X_test)  * y_std + y_mean
 
     train_r2   = 1 - np.var(y_train - y_pred_train) / (np.var(y_train) + 1e-10)
     train_mape = _mape(y_train, y_pred_train)
@@ -172,7 +179,6 @@ def _run_numpy_fallback(train_df: pd.DataFrame, test_df: pd.DataFrame, cfg: dict
 
     total_kpi = float(y_train.sum())
     channel_contribs = {}
-
     for ch in valid_channels:
         col = f"{ch}_saturated"
         if col not in present_cols:
@@ -188,7 +194,7 @@ def _run_numpy_fallback(train_df: pd.DataFrame, test_df: pd.DataFrame, cfg: dict
 
     return {
         "model": "lightweight_mmm",
-        "note": "lightweight_mmm/JAX not installed — used scipy NNLS fallback",
+        "note": "LightweightMMM/JAX unavailable — used BayesianRidge fallback",
         "train_r2": round(float(train_r2), 4),
         "train_mape": round(train_mape, 2),
         "test_mape": round(test_mape, 2),

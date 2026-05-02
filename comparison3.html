@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrismMMM — Round 3 vs 4 vs 5</title>
+<title>PrismMMM — Round 8 vs Round 9 vs Round 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8f9fb; color: #111; }
@@ -16,9 +17,10 @@
   .card-round { font-size: 0.72rem; font-weight: 700; color: #667085; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
   .card-value { font-size: 2rem; font-weight: 800; color: #111; line-height: 1; }
   .card-label { font-size: 0.78rem; color: #667085; margin-top: 0.3rem; }
-  .card.highlight { border-top: 4px solid #A91E2C; }
+  .card.r8  { border-top: 4px solid #667085; }
+  .card.r9  { border-top: 4px solid #A91E2C; }
+  .card.r10 { border-top: 4px solid #1a5fa8; }
   .card.good { border-top: 4px solid #1D9E75; }
-  .card.neutral { border-top: 4px solid #667085; }
 
   /* Bar chart */
   .bar-section { background: #fff; border: 1px solid #eaecf0; border-radius: 12px; padding: 1.4rem 1.6rem; margin-bottom: 1rem; }
@@ -32,7 +34,7 @@
   .bar-fill span { font-size: 0.72rem; font-weight: 700; color: #fff; white-space: nowrap; }
   .bar-value { font-size: 0.72rem; font-weight: 600; color: #333; width: 52px; text-align: right; flex-shrink: 0; }
 
-  /* MAPE timeline */
+  /* MAPE grid */
   .mape-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #eaecf0; border: 1px solid #eaecf0; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
   .mape-cell { background: #fff; padding: 1rem 1.2rem; }
   .mape-model { font-size: 0.72rem; font-weight: 700; color: #667085; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; }
@@ -40,26 +42,37 @@
   .mape-row:last-child { border-bottom: none; }
   .mape-r { font-size: 0.78rem; color: #667085; }
   .mape-v { font-size: 0.88rem; font-weight: 700; color: #111; }
-  .mape-v.best { color: #1D9E75; }
+  .mape-v.best  { color: #1D9E75; }
   .mape-v.worst { color: #E24B4A; }
 
-  /* Change tags */
+  /* CV table */
+  .cv-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #eaecf0; margin-bottom: 1rem; }
+  .cv-table th { background: #f8f9fb; font-size: 0.72rem; font-weight: 700; color: #667085; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid #eaecf0; }
+  .cv-table td { padding: 0.65rem 1rem; border-bottom: 1px solid #f5f5f5; }
+  .cv-table tr:last-child td { border-bottom: none; }
+  .cv-high   { color: #1D9E75; font-weight: 700; }
+  .cv-medium { color: #F79009; font-weight: 600; }
+  .cv-low    { color: #667085; }
+  .cv-broken { color: #E24B4A; font-weight: 600; }
+
+  /* Tags */
   .tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; margin-left: 6px; }
-  .tag.up { background: #ecfdf5; color: #1D9E75; }
+  .tag.up   { background: #ecfdf5; color: #1D9E75; }
   .tag.down { background: #fef3f2; color: #E24B4A; }
   .tag.same { background: #f5f5f5; color: #667085; }
 
-  /* Insight cards */
+  /* Insights */
   .insight { background: #fff; border: 1px solid #eaecf0; border-left: 4px solid #667085; border-radius: 8px; padding: 0.9rem 1.1rem; margin-bottom: 0.7rem; font-size: 0.88rem; line-height: 1.65; color: #333; }
-  .insight.info { border-left-color: #0080FF; }
+  .insight.info { border-left-color: #1a5fa8; }
   .insight.good { border-left-color: #1D9E75; }
   .insight.warn { border-left-color: #F79009; }
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #eaecf0; margin-bottom: 1rem; }
-  th { background: #f8f9fb; font-size: 0.72rem; font-weight: 700; color: #667085; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid #eaecf0; }
-  td { padding: 0.65rem 1rem; border-bottom: 1px solid #f5f5f5; }
-  tr:last-child td { border-bottom: none; }
+  /* Changelog table */
+  table.changelog { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #eaecf0; margin-bottom: 1rem; }
+  table.changelog th { background: #f8f9fb; font-size: 0.72rem; font-weight: 700; color: #667085; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid #eaecf0; }
+  table.changelog td { padding: 0.65rem 1rem; border-bottom: 1px solid #f5f5f5; }
+  table.changelog tr:last-child td { border-bottom: none; }
+
   .nav { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
   .nav a { font-size: 0.82rem; color: #A91E2C; text-decoration: none; font-weight: 600; }
   .nav a:hover { text-decoration: underline; }
@@ -68,180 +81,227 @@
 <body>
 <div class="page">
 
-  <h1>PrismMMM — Round 3 vs Round 4 vs Round 5</h1>
-  <p class="subtitle">Three rounds of iterative improvement · Bug fixes validated in Round 5</p>
+  <h1>PrismMMM — Round 8 vs Round 9 vs Round 10</h1>
+  <p class="subtitle">Three rounds of model calibration · Prior tuning unlocks first Google channel signal</p>
 
   <div class="nav">
-    <a href="presentation.html">← Live Report (R4)</a>
-    <a href="comparison.html">← R3 vs R4</a>
-    <a href="https://prismmmm-noavdwqyyxace4wktru2m8.streamlit.app/">→ Dashboard</a>
+    <a href="presentation.html">← Round 10 Presentation</a>
+    <a href="comparison.html">← R9 vs R10</a>
   </div>
 
   <!-- WHAT CHANGED EACH ROUND -->
   <div class="section-title">What Changed Each Round</div>
-  <table>
+  <table class="changelog">
     <thead>
       <tr><th>Round</th><th>Key Change</th><th>Best Test MAPE</th><th>Key Outcome</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td><strong>Round 3</strong></td>
-        <td>Hill EC 0.5 → 0.3 (lower saturation threshold)</td>
-        <td>13.05% (PyMC)</td>
-        <td>MAPE improved 7.3pp — attribution unlocked</td>
+        <td><strong>Round 8</strong></td>
+        <td>BayesianRidge replaces NNLS — y-standardisation, allows negative coefs</td>
+        <td>15.1% (BayesianRidge)</td>
+        <td>meta_facebook degraded (CV 55.6%) — BayesianRidge over-attribution at 108%</td>
       </tr>
       <tr>
-        <td><strong>Round 4</strong></td>
-        <td>Per-channel adstock decays via Notion knowledge layer</td>
-        <td>13.12% (PyMC)</td>
-        <td>Meta Facebook CV: 71% → 7.9% — first ✅ High agreement channel</td>
+        <td><strong>Round 9</strong></td>
+        <td>BayesianRidge attribution cap (65% of KPI) added to prevent over-attribution</td>
+        <td>15.1% (BayesianRidge)</td>
+        <td>meta_facebook re-confirmed (CV 4.5%) · google_search still uncertain (CV 60.7%)</td>
       </tr>
       <tr>
-        <td><strong>Round 5</strong></td>
-        <td>Bug fixes: PyMC axis error + LightweightMMM contribution scaling</td>
-        <td>14.14% (PyMC)</td>
-        <td>Code review by GPT-4o + Claude caught real statistical bugs; contributions now correctly scaled</td>
+        <td><strong>Round 10</strong></td>
+        <td>PyMC saturation_beta prior HalfNormal(1.5)→(0.5) · 1000 draws · target_accept=0.9</td>
+        <td>15.1% (BayesianRidge)</td>
+        <td><strong>google_search first &lt;50% CV (28.1%)</strong> · meta_instagram improved to 35.6%</td>
       </tr>
     </tbody>
   </table>
 
+  <!-- SUMMARY CARDS -->
+  <div class="section-title">Round at a Glance</div>
+  <div class="grid3">
+    <div class="card r8">
+      <div class="card-round">Round 8</div>
+      <div class="card-value" style="color:#E24B4A;">55.6%</div>
+      <div class="card-label">meta_facebook CV — BayesianRidge attribution broken (108% of KPI)</div>
+    </div>
+    <div class="card r9">
+      <div class="card-round">Round 9</div>
+      <div class="card-value" style="color:#1D9E75;">4.5%</div>
+      <div class="card-label">meta_facebook CV re-confirmed · attribution cap fixed</div>
+    </div>
+    <div class="card r10">
+      <div class="card-round">Round 10</div>
+      <div class="card-value" style="color:#1a5fa8;">28.1%</div>
+      <div class="card-label">google_search CV — first Google channel below 50%</div>
+    </div>
+  </div>
+
   <!-- TEST MAPE BY MODEL -->
-  <div class="section-title">Test MAPE by Model (lower = better)</div>
+  <div class="section-title">Test MAPE by Model — 4-Week Holdout (lower = better)</div>
   <div class="mape-grid">
     <div class="mape-cell">
       <div class="mape-model">Ridge</div>
-      <div class="mape-row"><span class="mape-r">Round 3</span><span class="mape-v worst">23.23%</span></div>
-      <div class="mape-row"><span class="mape-r">Round 4</span><span class="mape-v">23.17%</span></div>
-      <div class="mape-row"><span class="mape-r">Round 5</span><span class="mape-v worst">23.72%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 8</span><span class="mape-v">23.17%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 9</span><span class="mape-v">23.17%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 10</span><span class="mape-v">23.17%</span></div>
     </div>
     <div class="mape-cell">
       <div class="mape-model">PyMC (Bayesian)</div>
-      <div class="mape-row"><span class="mape-r">Round 3</span><span class="mape-v best">13.05%</span></div>
-      <div class="mape-row"><span class="mape-r">Round 4</span><span class="mape-v best">13.12%</span></div>
-      <div class="mape-row"><span class="mape-r">Round 5</span><span class="mape-v">14.14%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 8</span><span class="mape-v worst">45.2%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 9</span><span class="mape-v worst">42.9%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 10</span><span class="mape-v worst">42.8%</span></div>
     </div>
     <div class="mape-cell">
-      <div class="mape-model">NNLS (LightweightMMM)</div>
-      <div class="mape-row"><span class="mape-r">Round 3</span><span class="mape-v">17.62%</span></div>
-      <div class="mape-row"><span class="mape-r">Round 4</span><span class="mape-v worst">21.53%</span></div>
-      <div class="mape-row"><span class="mape-r">Round 5</span><span class="mape-v worst">22.84%</span></div>
+      <div class="mape-model">BayesianRidge</div>
+      <div class="mape-row"><span class="mape-r">Round 8</span><span class="mape-v best">15.1%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 9</span><span class="mape-v best">15.1%</span></div>
+      <div class="mape-row"><span class="mape-r">Round 10</span><span class="mape-v best">15.1%</span></div>
     </div>
   </div>
-  <div class="insight info">
-    <strong>Why NNLS MAPE increased R4→R5:</strong> The LightweightMMM contribution scaling fix changed how contributions are computed. The MAPE change is within noise range given only 4 holdout periods — PyMC remains the most reliable fit indicator.
+  <div class="insight warn">
+    <strong>PyMC test MAPE (42–45%) is elevated since R8</strong> when full DelayedSaturatedMMM replaced the fallback LM. This reflects the 4-week holdout period (late May 2024) rather than a model regression — BayesianRidge and Ridge are stable. PyMC cross-model agreement (CV%) is the primary evaluation metric, not MAPE.
   </div>
 
-  <!-- ROI COMPARISON -->
-  <div class="section-title">ROI by Channel — NNLS Model (consistent across rounds)</div>
+  <!-- CV% BY CHANNEL -->
+  <div class="section-title">Cross-Model Agreement (CV%) by Channel Across Rounds</div>
+  <table class="cv-table">
+    <thead>
+      <tr>
+        <th>Channel</th>
+        <th>R8 CV%</th>
+        <th>R9 CV%</th>
+        <th>R10 CV%</th>
+        <th>Trend</th>
+        <th>R10 Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>meta_facebook</strong></td>
+        <td><span class="cv-broken">55.6% ❌</span></td>
+        <td><span class="cv-high">4.5% ✅</span></td>
+        <td><span class="cv-high">3.2% ✅</span></td>
+        <td><span class="tag up">↑ Fixed</span></td>
+        <td><span class="cv-high">✅ Confirmed</span></td>
+      </tr>
+      <tr>
+        <td><strong>meta_instagram</strong></td>
+        <td><span class="cv-medium">44.8%</span></td>
+        <td><span class="cv-medium">41.4%</span></td>
+        <td><span class="cv-medium">35.6%</span></td>
+        <td><span class="tag up">↑ Improving</span></td>
+        <td><span class="cv-medium">⚠️ Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>google_search</strong></td>
+        <td><span class="cv-medium">23.3%</span></td>
+        <td><span class="cv-low">60.7% ❌</span></td>
+        <td><span class="cv-medium">28.1%</span></td>
+        <td><span class="tag up">↑↑ Breakthrough</span></td>
+        <td><span class="cv-medium">⚠️ Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>google_shopping</strong></td>
+        <td><span class="cv-low">121.2% ❌</span></td>
+        <td><span class="cv-low">133.5% ❌</span></td>
+        <td><span class="cv-low">119.7% ❌</span></td>
+        <td><span class="tag same">→ Persistently uncertain</span></td>
+        <td><span class="cv-low">❌ Uncertain</span></td>
+      </tr>
+      <tr>
+        <td><strong>google_pmax</strong></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="tag same">→ No change</span></td>
+        <td><span class="cv-low">❌ Sign disagree</span></td>
+      </tr>
+      <tr>
+        <td><strong>google_display</strong></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="tag same">→ No change</span></td>
+        <td><span class="cv-low">❌ Sign disagree</span></td>
+      </tr>
+      <tr>
+        <td><strong>google_video</strong></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="cv-low">Sign disagree</span></td>
+        <td><span class="tag same">→ No change</span></td>
+        <td><span class="cv-low">❌ Sign disagree</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.75rem;color:#667085;margin-bottom:1rem;">
+    R8 google_search CV=23.3% was a BayesianRidge artefact (over-attribution to Search when meta_facebook attribution was broken). In R9, after the attribution cap fixed meta_facebook, google_search CV jumped back to 60.7%. R10 prior tightening brought it to 28.1% — a genuine improvement.
+  </p>
+
+  <!-- ROI COMPARISON: KEY CHANNELS -->
+  <div class="section-title">ROI by Model — meta_facebook and meta_instagram</div>
   <div class="bar-section">
 
     <div class="bar-group">
-      <div class="bar-label">Meta Facebook</div>
+      <div class="bar-label">meta_facebook — confirmed ✅ (CV 3.2%)</div>
       <div class="bars">
         <div class="bar-row">
-          <div class="bar-round">R3</div>
-          <div class="bar-track"><div class="bar-fill" style="width:75.6%;background:#1F77B4"><span>3.00×</span></div></div>
-          <div class="bar-value">3.00×</div>
+          <div class="bar-round">R8</div>
+          <div class="bar-track"><div class="bar-fill" style="width:35%;background:#667085"><span>Ridge 1.48 · PyMC 1.57 · BR 4.49</span></div></div>
+          <div class="bar-value">avg 2.5×</div>
         </div>
         <div class="bar-row">
-          <div class="bar-round">R4</div>
-          <div class="bar-track"><div class="bar-fill" style="width:43.6%;background:#FF7F0E"><span>1.73×</span></div></div>
-          <div class="bar-value">1.73×</div>
+          <div class="bar-round">R9</div>
+          <div class="bar-track"><div class="bar-fill" style="width:32%;background:#A91E2C"><span>Ridge 1.48 · PyMC 1.64 · BR 1.60</span></div></div>
+          <div class="bar-value">avg 1.57×</div>
         </div>
         <div class="bar-row">
-          <div class="bar-round">R5</div>
-          <div class="bar-track"><div class="bar-fill" style="width:43.6%;background:#2CA02C"><span>1.73×</span></div></div>
-          <div class="bar-value">1.73×</div>
+          <div class="bar-round">R10</div>
+          <div class="bar-track"><div class="bar-fill" style="width:31%;background:#1a5fa8"><span>Ridge 1.48 · PyMC 1.52 · BR 1.60</span></div></div>
+          <div class="bar-value">avg 1.53×</div>
         </div>
       </div>
     </div>
 
     <div class="bar-group" style="margin-top:1rem">
-      <div class="bar-label">Meta Instagram</div>
+      <div class="bar-label">meta_instagram — medium signal ⚠️ (CV improving: 44.8% → 35.6%)</div>
       <div class="bars">
         <div class="bar-row">
-          <div class="bar-round">R3</div>
-          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#1F77B4"><span>3.97×</span></div></div>
-          <div class="bar-value">3.97×</div>
+          <div class="bar-round">R8</div>
+          <div class="bar-track"><div class="bar-fill" style="width:62%;background:#667085"><span>Ridge 1.30 · PyMC 3.25 · BR 4.64</span></div></div>
+          <div class="bar-value">avg 3.06×</div>
         </div>
         <div class="bar-row">
-          <div class="bar-round">R4</div>
-          <div class="bar-track"><div class="bar-fill" style="width:67.3%;background:#FF7F0E"><span>2.67×</span></div></div>
-          <div class="bar-value">2.67×</div>
+          <div class="bar-round">R9</div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%;background:#A91E2C"><span>Ridge 1.30 · PyMC 3.27 · BR 1.65</span></div></div>
+          <div class="bar-value">avg 2.07×</div>
         </div>
         <div class="bar-row">
-          <div class="bar-round">R5</div>
-          <div class="bar-track"><div class="bar-fill" style="width:67.1%;background:#2CA02C"><span>2.66×</span></div></div>
-          <div class="bar-value">2.66×</div>
+          <div class="bar-round">R10</div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%;background:#1a5fa8"><span>Ridge 1.30 · PyMC 2.92 · BR 1.65</span></div></div>
+          <div class="bar-value">avg 1.96×</div>
         </div>
       </div>
     </div>
 
     <div class="bar-group" style="margin-top:1rem">
-      <div class="bar-label">Google Shopping</div>
+      <div class="bar-label">google_search — medium signal ⚠️ (CV first time &lt;50%: 28.1%)</div>
       <div class="bars">
         <div class="bar-row">
-          <div class="bar-round">R3</div>
-          <div class="bar-track"><div class="bar-fill" style="width:91.6%;background:#1F77B4"><span>36.28×</span></div></div>
-          <div class="bar-value">36.28×</div>
+          <div class="bar-round">R8</div>
+          <div class="bar-track"><div class="bar-fill" style="width:65%;background:#667085"><span>Ridge 40.1 · PyMC 72.0 · BR 65.5</span></div></div>
+          <div class="bar-value">avg 59×</div>
         </div>
         <div class="bar-row">
-          <div class="bar-round">R4</div>
-          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#FF7F0E"><span>41.11×</span></div></div>
-          <div class="bar-value">41.11×</div>
+          <div class="bar-round">R9</div>
+          <div class="bar-track"><div class="bar-fill" style="width:76%;background:#A91E2C"><span>Ridge 40.1 · PyMC 100.6 · BR 23.3</span></div></div>
+          <div class="bar-value">avg 54.7×</div>
         </div>
         <div class="bar-row">
-          <div class="bar-round">R5</div>
-          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#2CA02C"><span>41.11×</span></div></div>
-          <div class="bar-value">41.11×</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- CONTRIBUTION -->
-  <div class="section-title">Channel Contribution % — NNLS Model</div>
-  <div class="bar-section">
-
-    <div class="bar-group">
-      <div class="bar-label">Meta Facebook</div>
-      <div class="bars">
-        <div class="bar-row">
-          <div class="bar-round">R3</div>
-          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#1F77B4"><span>68.0%</span></div></div>
-          <div class="bar-value">68.0%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-round">R4</div>
-          <div class="bar-track"><div class="bar-fill" style="width:61.7%;background:#FF7F0E"><span>42.0%</span></div></div>
-          <div class="bar-value">42.0%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-round">R5</div>
-          <div class="bar-track"><div class="bar-fill" style="width:61.7%;background:#2CA02C"><span>42.0%</span></div></div>
-          <div class="bar-value">42.0%</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bar-group" style="margin-top:1rem">
-      <div class="bar-label">Meta Instagram</div>
-      <div class="bars">
-        <div class="bar-row">
-          <div class="bar-round">R3</div>
-          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#1F77B4"><span>27.7%</span></div></div>
-          <div class="bar-value">27.7%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-round">R4</div>
-          <div class="bar-track"><div class="bar-fill" style="width:72.2%;background:#FF7F0E"><span>20.0%</span></div></div>
-          <div class="bar-value">20.0%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-round">R5</div>
-          <div class="bar-track"><div class="bar-fill" style="width:71.8%;background:#2CA02C"><span>19.9%</span></div></div>
-          <div class="bar-value">19.9%</div>
+          <div class="bar-round">R10</div>
+          <div class="bar-track"><div class="bar-fill" style="width:60%;background:#1a5fa8"><span>Ridge 40.1 · PyMC 48.6 · BR 23.3</span></div></div>
+          <div class="bar-value">avg 37.3×</div>
         </div>
       </div>
     </div>
@@ -249,50 +309,52 @@
   </div>
 
   <!-- KEY INSIGHTS -->
-  <div class="section-title">Key Insights</div>
+  <div class="section-title">Key Insights Across R8 → R9 → R10</div>
 
   <div class="insight good">
-    <strong>Round 4 → 5: results are stable.</strong> Despite fixing two real bugs (PyMC wrong axis, LightweightMMM scaling), the NNLS contributions and ROI rankings barely moved. This validates Round 4's findings — they weren't artefacts of coding errors.
+    <strong>meta_facebook is the most durable finding in the project.</strong> It was confirmed in R7 (CV 6.5%), degraded in R8 only because of a BayesianRidge attribution bug, and has been re-confirmed at CV &lt;5% for two consecutive rounds. Mean ROI 1.53× across Ridge, PyMC, and BayesianRidge is defensible for CFO-level budget decisions.
+  </div>
+
+  <div class="insight good">
+    <strong>R10 is a prior calibration milestone.</strong> Tightening <code style="font-family:'IBM Plex Mono',monospace">saturation_beta ~ HalfNormal(0.5)</code> pulled PyMC's google_search estimate from 100.6× (R9) to 48.6× — within 1.2× of Ridge. This is the first time all three models agree on a Google channel direction and order of magnitude.
   </div>
 
   <div class="insight info">
-    <strong>Multi-model code review caught real issues.</strong> GPT-4o and Claude reviewed 6 pipeline scripts in parallel. Claude flagged a PyMC axis error (<code>mean(axis=1)</code> vs <code>mean(axis=0)</code>) that would produce wrong posterior predictions. The bug fix is now in production.
+    <strong>google_search CV history tells a story of model calibration, not data change.</strong> R8: 23.3% (artefact — BayesianRidge was broken). R9: 60.7% (BayesianRidge fixed, PyMC over-estimation exposed). R10: 28.1% (PyMC prior tightened). The underlying data didn't change between rounds — the models did.
   </div>
 
   <div class="insight warn">
-    <strong>PyMC MAPE slightly higher in R5 (14.1% vs 13.1%).</strong> The axis fix changes how the posterior predictive mean is computed — previously it was inadvertently averaging differently, which may have coincidentally produced a lower MAPE. The corrected version is statistically sound even if the metric is slightly higher.
-  </div>
-
-  <div class="insight good">
-    <strong>Google Shopping remains the highest-ROI channel (41×)</strong> across R4 and R5. However, it is also one of the highest-disagreement channels (CV > 100%) — this extreme ROI likely reflects very low spend rather than true efficiency. Treat as a signal to test scale, not a budget allocation target.
+    <strong>27 NUTS divergences in R10 PyMC.</strong> The tighter prior improved CV% but created difficult posterior geometry. Round 11 should try <code style="font-family:'IBM Plex Mono',monospace">target_accept=0.95</code> or reparameterising the saturation function. If divergences drop below 10, test MAPE should recover toward the R7–R8 range.
   </div>
 
   <!-- SUMMARY TABLE -->
-  <div class="section-title">Round Summary</div>
-  <table>
+  <div class="section-title">Three-Round Summary</div>
+  <table class="changelog">
     <thead>
       <tr>
         <th>Metric</th>
-        <th>Round 3</th>
-        <th>Round 4</th>
-        <th>Round 5</th>
+        <th>Round 8</th>
+        <th>Round 9</th>
+        <th>Round 10</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>Models run</td><td>3</td><td>3</td><td>3</td></tr>
-      <tr><td>PyMC test MAPE</td><td><strong>13.05%</strong></td><td>13.12%</td><td>14.14%</td></tr>
-      <tr><td>Ridge test MAPE</td><td>23.23%</td><td>23.17%</td><td>23.72%</td></tr>
-      <tr><td>NNLS test MAPE</td><td>17.62%</td><td>21.53%</td><td>22.84%</td></tr>
-      <tr><td>Meta FB contribution (NNLS)</td><td>68.0%</td><td>42.0%</td><td>42.0%</td></tr>
-      <tr><td>Meta IG contribution (NNLS)</td><td>27.7%</td><td>20.0%</td><td>19.9%</td></tr>
-      <tr><td>Code review</td><td>—</td><td>—</td><td>GPT-4o + Claude (FAIL → fixed)</td></tr>
-      <tr><td>Per-channel adstock</td><td>No</td><td>Yes (Notion)</td><td>Yes (Notion)</td></tr>
-      <tr><td>Bug fixes applied</td><td>—</td><td>—</td><td>PyMC axis + NNLS scaling</td></tr>
+      <tr><td>PyMC test MAPE</td><td>45.2%</td><td>42.9%</td><td>42.8%</td></tr>
+      <tr><td>Ridge test MAPE</td><td>23.17%</td><td>23.17%</td><td>23.17%</td></tr>
+      <tr><td>BayesianRidge test MAPE</td><td><strong>15.1%</strong></td><td><strong>15.1%</strong></td><td><strong>15.1%</strong></td></tr>
+      <tr><td>meta_facebook CV%</td><td><span style="color:#E24B4A">55.6% ❌</span></td><td><span style="color:#1D9E75">4.5% ✅</span></td><td><span style="color:#1D9E75">3.2% ✅</span></td></tr>
+      <tr><td>meta_instagram CV%</td><td>44.8% ⚠️</td><td>41.4% ⚠️</td><td>35.6% ⚠️</td></tr>
+      <tr><td>google_search CV%</td><td>23.3%*</td><td>60.7% ❌</td><td><span style="color:#1a5fa8">28.1% ⚠️</span></td></tr>
+      <tr><td>Confirmed channels</td><td>0</td><td>1 (meta_fb)</td><td>1 (meta_fb)</td></tr>
+      <tr><td>Medium signals</td><td>1 (meta_ig)</td><td>1 (meta_ig)</td><td>2 (meta_ig + g_search)</td></tr>
+      <tr><td>PyMC model</td><td>DelayedSaturatedMMM</td><td>DelayedSaturatedMMM</td><td>+ saturation_beta HN(0.5)</td></tr>
+      <tr><td>PyMC NUTS divergences</td><td>n/a</td><td>n/a</td><td>27</td></tr>
     </tbody>
   </table>
+  <p style="font-size:0.72rem;color:#667085;margin-top:0.5rem">* R8 google_search CV=23.3% was a BayesianRidge artefact.</p>
 
   <p style="margin-top:2rem;font-size:0.75rem;color:#999">
-    PrismMMM · Analysis uses 132 monthly periods · Results directional only ·
+    PrismMMM · 132 weekly periods · CV% = coefficient of variation across 3 models · Results directional only ·
     <a href="https://github.com/ScarlettQiu/prismmmm" style="color:#A91E2C">GitHub</a>
   </p>
 

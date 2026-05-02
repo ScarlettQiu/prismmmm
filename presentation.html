@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrismMMM — Round 3 Results</title>
+  <title>PrismMMM — Round 10 Results</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -96,9 +96,10 @@
       background: rgba(192,18,42,.08); border: 1px solid var(--border-red); color: var(--red);
     }
     .badge.green { background: rgba(26,128,64,.10); border-color: rgba(26,128,64,.28); color: var(--green); }
+    .badge.amber { background: rgba(143,98,0,.10); border-color: rgba(143,98,0,.28); color: var(--amber); }
 
     /* ═══════════════════════════════════════════════════
-       SLIDE 1 — TITLE  (full-bleed dark red, centered)
+       SLIDE 1 — TITLE
        ═══════════════════════════════════════════════════ */
     #s1 {
       background: radial-gradient(ellipse 80% 70% at 50% 35%, rgba(192,18,42,0.07) 0%, #ffffff 65%), #ffffff;
@@ -118,7 +119,7 @@
     #s1 .kicker { color: var(--red); margin-bottom: 1.4rem; }
     #s1 h1 { color: var(--text); margin-bottom: 1rem; }
     #s1 h1 span { color: var(--red-light); }
-    #s1 > p { max-width: 44ch; margin: 0 auto 2.5rem; font-size: clamp(.9rem,1.5vw,1.05rem); color: var(--text-2); }
+    #s1 > p { max-width: 48ch; margin: 0 auto 2.5rem; font-size: clamp(.9rem,1.5vw,1.05rem); color: var(--text-2); }
 
     .hero-stats {
       display: flex; gap: 3rem; justify-content: center;
@@ -129,247 +130,264 @@
     .hero-stat .l { font-size: .72rem; color: var(--text-3); font-family: 'IBM Plex Mono',monospace; margin-top: .1rem; }
     .hero-stat .v.red { color: var(--red-light); }
     .hero-stat .v.green { color: var(--green); }
+    .hero-stat .v.amber { color: var(--amber); }
 
     /* ═══════════════════════════════════════════════════
-       SLIDE 2 — DATASET  (giant numbers, asymmetric)
+       SLIDE 2 — WHAT CHANGED IN R10
        ═══════════════════════════════════════════════════ */
-    #s2 { padding: 0; align-items: stretch; }
-    .s2-left {
-      flex: 0 0 42%; background: var(--surface);
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 5rem 4vw; border-right: 1px solid var(--border);
-    }
-    .s2-left h2 { margin-top: .8rem; margin-bottom: 1rem; }
-    .s2-left p  { max-width: 32ch; }
-    .s2-right {
-      flex: 1; display: grid; grid-template-columns: 1fr 1fr;
-      background: var(--bg); padding: 4rem 3vw; gap: 1.5rem; align-content: center;
-    }
-    .big-stat {
-      padding: 1.75rem; border: 1px solid var(--border); border-radius: 10px;
-      background: var(--surface);
-    }
-    .big-stat .n { font-size: clamp(2.2rem,4vw,3.2rem); font-weight: 900; letter-spacing: -.04em; line-height: 1; margin-bottom: .35rem; }
-    .big-stat .d { font-size: .78rem; color: var(--text-2); line-height: 1.55; }
-    .big-stat.warn { border-color: rgba(169,30,44,.4); background: rgba(169,30,44,.06); }
-    .big-stat.warn .n { color: var(--red-light); }
-    .big-stat .n.g { color: var(--green); }
-    .big-stat .n.o { color: var(--orange); }
+    #s2 { padding: 4rem 8vw; flex-direction: column; }
+    #s2 .wrap { width: 100%; max-width: 1040px; }
 
-    /* ═══════════════════════════════════════════════════
-       SLIDE 3 — THREE MODELS  (stacked rows)
-       ═══════════════════════════════════════════════════ */
-    #s3 { flex-direction: column; padding: 4rem 8vw; }
-    #s3 .header { width: 100%; max-width: 1080px; margin-bottom: 2rem; }
-
-    .model-row {
-      width: 100%; max-width: 1080px;
-      display: grid; grid-template-columns: 220px 1fr 1fr auto;
-      align-items: center; gap: 0;
-      border: 1px solid var(--border); border-radius: 10px;
-      overflow: hidden; margin-bottom: .7rem;
-      background: var(--surface);
+    .change-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.4rem; margin-top: 1.8rem;
     }
-    .model-row:first-of-type { border-top-color: var(--red-light); border-top-width: 2px; }
-
-    .mr-name {
-      padding: 1.3rem 1.5rem; border-right: 1px solid var(--border);
-    }
-    .mr-name h3 { margin-bottom: .2rem; }
-    .mr-name .tag { font-family: 'IBM Plex Mono',monospace; font-size: .68rem; color: var(--text-3); }
-
-    .mr-pros, .mr-cons {
-      padding: 1.3rem 1.4rem; border-right: 1px solid var(--border);
-    }
-    .mr-label { font-family: 'IBM Plex Mono',monospace; font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-3); margin-bottom: .5rem; }
-    .pro { font-size: .8rem; color: var(--text-2); line-height: 1.6; }
-    .pro::before { content: '+ '; color: var(--green); }
-    .con { font-size: .8rem; color: var(--text-2); line-height: 1.6; }
-    .con::before { content: '− '; color: var(--red-light); }
-
-    .mr-mape {
-      padding: 1.3rem 1.5rem; text-align: right; min-width: 130px;
-    }
-    .mape-n { font-family: 'IBM Plex Mono',monospace; font-size: 1.3rem; font-weight: 700; }
-    .mape-l { font-size: .72rem; color: var(--text-3); margin-top: .15rem; }
-
-    /* ═══════════════════════════════════════════════════
-       SLIDE 4 — TUNING  (timeline + table hybrid)
-       ═══════════════════════════════════════════════════ */
-    #s4 { padding: 4rem 8vw; flex-direction: column; }
-    #s4 .wrap { width: 100%; max-width: 1000px; }
-
-    .timeline { display: flex; gap: 0; margin: 2rem 0; position: relative; }
-    .timeline::before {
-      content: ''; position: absolute;
-      top: 28px; left: 28px; right: 28px; height: 2px;
-      background: var(--border); z-index: 0;
-    }
-    .tl-node {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      position: relative; z-index: 1;
-    }
-    .tl-circle {
-      width: 56px; height: 56px; border-radius: 50%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      font-family: 'IBM Plex Mono',monospace; font-size: .65rem; font-weight: 600;
-      border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
-      margin-bottom: .8rem;
-    }
-    .tl-circle .rnum { font-size: .55rem; color: var(--text-3); }
-    .tl-circle .rmape { font-size: .82rem; font-weight: 700; }
-    .tl-circle.best { border-color: rgba(26,128,64,.45); background: rgba(26,128,64,.08); }
-    .tl-circle.best .rmape { color: var(--green); }
-    .tl-body { text-align: center; padding: 0 .5rem; }
-    .tl-body .change { font-size: .78rem; color: var(--text-2); line-height: 1.5; margin-bottom: .35rem; }
-    .tl-body .verdict { }
-
-    .delta-g { color: var(--green); font-family: 'IBM Plex Mono',monospace; font-size: .74rem; }
-    .delta-r { color: var(--red-light); font-family: 'IBM Plex Mono',monospace; font-size: .74rem; }
-
-    .mape-trail {
-      display: flex; align-items: center; gap: .7rem;
+    .change-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: 1rem 1.5rem;
+      border-radius: 10px; padding: 1.4rem 1.5rem;
     }
-    .trail-label { font-family: 'IBM Plex Mono',monospace; font-size: .65rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .1em; margin-right: .3rem; }
-    .trail-node {
-      font-family: 'IBM Plex Mono',monospace; font-size: .82rem;
-      padding: .3rem .7rem; border-radius: 5px;
-      background: rgba(0,0,0,.05); border: 1px solid rgba(0,0,0,.09); color: var(--text-2);
+    .change-card.highlight { border-color: var(--border-red); background: rgba(192,18,42,.05); }
+    .change-card .cc-label { font-family: 'IBM Plex Mono',monospace; font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-3); margin-bottom: .6rem; }
+    .change-card .cc-title { font-size: .96rem; font-weight: 700; color: var(--text); margin-bottom: .45rem; }
+    .change-card .cc-body  { font-size: .8rem; color: var(--text-2); line-height: 1.7; }
+    .change-card code { font-family: 'IBM Plex Mono',monospace; font-size: .78rem; background: rgba(0,0,0,.06); padding: .1rem .35rem; border-radius: 3px; }
+
+    .cv-pill {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-family: 'IBM Plex Mono',monospace; font-size: .68rem;
+      padding: .2rem .55rem; border-radius: 3px; margin-top: .5rem;
     }
-    .trail-node.best { background: rgba(26,128,64,.10); border-color: rgba(26,128,64,.30); color: var(--green); }
-    .trail-arrow { color: var(--text-3); }
-    .trail-note { font-size: .82rem; color: var(--text-2); margin-left: .5rem; }
+    .cv-pill.good  { background: rgba(26,128,64,.10); border: 1px solid rgba(26,128,64,.28); color: var(--green); }
+    .cv-pill.ok    { background: rgba(143,98,0,.10);  border: 1px solid rgba(143,98,0,.28);  color: var(--amber); }
+    .cv-pill.bad   { background: rgba(192,18,42,.08); border: 1px solid var(--border-red);   color: var(--red); }
 
     /* ═══════════════════════════════════════════════════
-       SLIDE 5 — CHANNEL ROI  (chart-focused, dark)
+       SLIDE 3 — CHANNEL AGREEMENT TABLE
        ═══════════════════════════════════════════════════ */
-    #s5 { padding: 0; align-items: stretch; }
-    .s5-left {
-      flex: 0 0 36%; background: var(--red-dark);
-      background: linear-gradient(160deg, var(--red-dark) 0%, #3d0a10 100%);
+    #s3 { flex-direction: column; padding: 3.5rem 6vw; }
+    #s3 .inner { width: 100%; max-width: 1060px; }
+
+    .agree-table {
+      width: 100%; border-collapse: collapse; margin-top: 1.6rem;
+    }
+    .agree-table th {
+      font-family: 'IBM Plex Mono',monospace; font-size: .62rem;
+      text-transform: uppercase; letter-spacing: .1em; color: var(--text-3);
+      text-align: right; padding: .5rem .9rem; border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .agree-table th:first-child { text-align: left; }
+    .agree-table td {
+      font-size: .82rem; padding: .72rem .9rem;
+      border-bottom: 1px solid var(--border); vertical-align: middle;
+      text-align: right; font-family: 'IBM Plex Mono',monospace; color: var(--text-2);
+    }
+    .agree-table td:first-child { text-align: left; font-family: 'Inter',sans-serif; font-weight: 500; color: var(--text); }
+    .agree-table tr:last-child td { border-bottom: none; }
+    .agree-table tr:hover td { background: var(--surface); }
+    .agree-table tr.top-row td { background: rgba(26,128,64,.04); }
+    .agree-table tr.top-row td:first-child { font-weight: 700; }
+
+    .status-chip {
+      display: inline-flex; align-items: center; gap: .25rem;
+      font-family: 'IBM Plex Mono',monospace; font-size: .6rem;
+      padding: .18rem .5rem; border-radius: 3px; text-transform: uppercase; letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .status-chip.confirmed { background: rgba(26,128,64,.10); border: 1px solid rgba(26,128,64,.28); color: var(--green); }
+    .status-chip.medium    { background: rgba(143,98,0,.10);  border: 1px solid rgba(143,98,0,.28);  color: var(--amber); }
+    .status-chip.uncertain { background: rgba(192,18,42,.08); border: 1px solid var(--border-red);   color: var(--red); }
+
+    .cv-cell.good  { color: var(--green); }
+    .cv-cell.ok    { color: var(--amber); }
+    .cv-cell.bad   { color: var(--red); }
+
+    /* ═══════════════════════════════════════════════════
+       SLIDE 4 — meta_facebook DEEP DIVE
+       ═══════════════════════════════════════════════════ */
+    #s4 { padding: 0; align-items: stretch; }
+    .s4-left {
+      flex: 0 0 38%; background: linear-gradient(160deg, var(--red-dark) 0%, #3d0a10 100%);
       display: flex; flex-direction: column; justify-content: center;
       padding: 5rem 4vw; position: relative; overflow: hidden;
     }
-    .s5-left::after {
+    .s4-left::after {
       content: ''; position: absolute; bottom: -40%; right: -30%;
       width: 70%; height: 70%;
       background: radial-gradient(circle, rgba(214,48,49,.2) 0%, transparent 65%);
     }
-    .s5-left h2 { color: #fff; margin: .8rem 0 1rem; }
-    .s5-left p  { color: rgba(255,255,255,.62); max-width: 28ch; }
-    .s5-highlight {
+    .s4-left .eyebrow { color: rgba(255,255,255,.5); margin-bottom: .7rem; }
+    .s4-left h2 { color: #fff; margin-bottom: 1rem; }
+    .s4-left p  { color: rgba(255,255,255,.62); max-width: 28ch; }
+    .s4-highlight {
       margin-top: 2rem; padding: 1.2rem 1.4rem;
       background: rgba(0,0,0,.3); border-radius: 8px;
       border-left: 3px solid rgba(255,255,255,.4);
     }
-    .s5-highlight .hv { font-size: 2rem; font-weight: 900; color: #fff; letter-spacing: -.04em; }
-    .s5-highlight .hl { font-size: .75rem; color: rgba(255,255,255,.5); font-family: 'IBM Plex Mono',monospace; margin-top: .15rem; }
-
-    .s5-right {
+    .s4-highlight .hv { font-size: 2rem; font-weight: 900; color: #fff; letter-spacing: -.04em; }
+    .s4-highlight .hl { font-size: .75rem; color: rgba(255,255,255,.5); font-family: 'IBM Plex Mono',monospace; margin-top: .15rem; }
+    .s4-right {
       flex: 1; padding: 4rem 4vw; display: flex;
-      flex-direction: column; justify-content: center;
+      flex-direction: column; justify-content: center; background: var(--bg);
+    }
+
+    /* CV history mini timeline */
+    .cv-timeline { display: flex; gap: 0; align-items: flex-end; margin: 1.4rem 0; position: relative; }
+    .cv-timeline::before {
+      content: ''; position: absolute;
+      bottom: 28px; left: 24px; right: 24px; height: 1px;
+      background: var(--border);
+    }
+    .cvt-node { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
+    .cvt-dot {
+      width: 46px; height: 46px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono',monospace; font-size: .62rem;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+      margin-bottom: .6rem;
+    }
+    .cvt-dot .rn  { font-size: .52rem; color: var(--text-3); }
+    .cvt-dot .cv  { font-size: .78rem; font-weight: 700; }
+    .cvt-dot.best { border-color: rgba(26,128,64,.45); background: rgba(26,128,64,.08); }
+    .cvt-dot.best .cv { color: var(--green); }
+    .cvt-dot.warn { border-color: rgba(192,18,42,.3); background: rgba(192,18,42,.05); }
+    .cvt-dot.warn .cv { color: var(--red-light); }
+    .cvt-label { font-size: .72rem; color: var(--text-3); font-family: 'IBM Plex Mono',monospace; }
+
+    .roi-trio {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem; margin-top: 1rem;
+    }
+    .roi-trio-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: .9rem 1rem;
+    }
+    .roi-trio-card .model-name { font-family: 'IBM Plex Mono',monospace; font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: .35rem; }
+    .roi-trio-card .roi-val    { font-size: 1.6rem; font-weight: 900; color: var(--text); letter-spacing: -.04em; }
+
+    /* ═══════════════════════════════════════════════════
+       SLIDE 5 — meta_instagram + google_search
+       ═══════════════════════════════════════════════════ */
+    #s5 { flex-direction: column; padding: 4rem 8vw; }
+    #s5 .wrap { width: 100%; max-width: 1060px; }
+
+    .medium-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.8rem; }
+    .medium-card {
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      background: var(--surface);
+    }
+    .medium-card-header {
+      padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
       background: var(--bg);
     }
+    .medium-card-header h3 { font-size: .96rem; }
+    .medium-card-body { padding: 1.4rem 1.5rem; }
+    .medium-card-body p { font-size: .8rem; margin-bottom: .8rem; }
 
-    .bar-row { display: flex; align-items: center; gap: .9rem; margin-bottom: .75rem; }
-    .bar-lbl { width: 150px; flex-shrink: 0; font-size: .84rem; font-weight: 500; text-align: right; color: var(--text-2); }
-    .bar-lbl.top { color: var(--text); font-weight: 600; }
-    .bar-track { flex: 1; height: 24px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
-    .bar-fill  { height: 100%; border-radius: 4px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
-    .bar-val   { width: 50px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .78rem; color: var(--text-2); }
+    .roi-row-sm { display: flex; align-items: center; gap: .7rem; margin-bottom: .5rem; }
+    .roi-row-sm .model-tag { font-family: 'IBM Plex Mono',monospace; font-size: .6rem; text-transform: uppercase; color: var(--text-3); width: 88px; flex-shrink: 0; text-align: right; }
+    .roi-row-sm .roi-bar-track { flex: 1; height: 16px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+    .roi-row-sm .roi-bar-fill  { height: 100%; border-radius: 3px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
+    .roi-row-sm .roi-num { font-family: 'IBM Plex Mono',monospace; font-size: .74rem; color: var(--text-2); width: 36px; text-align: right; flex-shrink: 0; }
+
+    .cv-history-row { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
+    .cv-history-row .ch-label { font-family: 'IBM Plex Mono',monospace; font-size: .6rem; text-transform: uppercase; color: var(--text-3); width: 60px; flex-shrink: 0; }
+    .cv-pill-sm {
+      font-family: 'IBM Plex Mono',monospace; font-size: .65rem;
+      padding: .15rem .45rem; border-radius: 3px;
+    }
+    .cv-pill-sm.good  { background: rgba(26,128,64,.10); border: 1px solid rgba(26,128,64,.28); color: var(--green); }
+    .cv-pill-sm.ok    { background: rgba(143,98,0,.10);  border: 1px solid rgba(143,98,0,.28);  color: var(--amber); }
+    .cv-pill-sm.bad   { background: rgba(192,18,42,.08); border: 1px solid var(--border-red);   color: var(--red); }
+    .ch-arrow { color: var(--text-3); font-size: .72rem; }
 
     /* ═══════════════════════════════════════════════════
-       SLIDE 6 — AFFILIATES QUOTE  (minimal, huge)
+       SLIDE 6 — MODEL FIT COMPARISON
        ═══════════════════════════════════════════════════ */
-    #s6 {
-      background: var(--bg-2);
-      flex-direction: column; text-align: center;
-      padding: 4rem 6vw;
+    #s6 { flex-direction: column; padding: 4rem 8vw; }
+    #s6 .wrap { width: 100%; max-width: 1060px; }
+
+    .model-fit-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-top: 1.8rem; }
+    .fit-card {
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      background: var(--surface);
     }
-    .q-overline {
-      width: 40px; height: 2px;
-      background: var(--red-light);
-      margin: 0 auto 1.8rem;
-      animation: lineIn .6s .2s ease both;
-      transform-origin: left;
+    .fit-card-top {
+      padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border); background: var(--bg);
     }
-    .q-text {
-      font-size: clamp(1.8rem,4vw,3rem);
-      font-weight: 900; line-height: 1.2;
-      letter-spacing: -.035em;
-      max-width: 18ch; margin: 0 auto 1rem;
+    .fit-card-top h3 { font-size: .92rem; margin-bottom: .15rem; }
+    .fit-card-top .fc-tag { font-family: 'IBM Plex Mono',monospace; font-size: .6rem; color: var(--text-3); }
+    .fit-card-body { padding: 1.2rem 1.4rem; }
+
+    .fit-metric { display: flex; justify-content: space-between; align-items: center; padding: .42rem 0; border-bottom: 1px solid var(--border); }
+    .fit-metric:last-child { border-bottom: none; }
+    .fit-metric .fm-lbl { font-size: .78rem; color: var(--text-2); }
+    .fit-metric .fm-val { font-family: 'IBM Plex Mono',monospace; font-size: .82rem; font-weight: 600; }
+    .fm-val.good  { color: var(--green); }
+    .fm-val.ok    { color: var(--amber); }
+    .fm-val.bad   { color: var(--red-light); }
+
+    .fit-note {
+      margin-top: .9rem; padding: .6rem .8rem;
+      background: rgba(0,0,0,.04); border-radius: 6px;
+      font-size: .74rem; color: var(--text-3); line-height: 1.6;
     }
-    .q-text em { color: var(--red-light); font-style: normal; }
-    .q-sub {
-      font-family: 'IBM Plex Mono',monospace; font-size: .8rem;
-      color: var(--text-3); margin-bottom: 3rem;
-    }
-    .triple { display: flex; gap: 4rem; justify-content: center; }
-    .triple .n { font-size: clamp(2.4rem,4.5vw,3.4rem); font-weight: 900; color: var(--red-light); letter-spacing: -.05em; }
-    .triple .d { font-size: .72rem; color: var(--text-3); font-family: 'IBM Plex Mono',monospace; margin-top: .15rem; }
-    .triple-divider { width: 1px; background: var(--border); align-self: stretch; }
+    .fit-note.warn { background: rgba(192,18,42,.06); color: var(--red); border: 1px solid rgba(192,18,42,.15); }
 
     /* ═══════════════════════════════════════════════════
-       SLIDE 7 — CONTRIBUTIONS  (donut + bars)
+       SLIDE 7 — ROI BAR CHART
        ═══════════════════════════════════════════════════ */
-    #s7 { padding: 4rem 8vw; }
-    #s7 .wrap { width: 100%; max-width: 1080px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: start; }
+    #s7 { padding: 0; align-items: stretch; }
+    .s7-left {
+      flex: 0 0 34%; background: linear-gradient(160deg, var(--red-dark) 0%, #3d0a10 100%);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 4vw; position: relative; overflow: hidden;
+    }
+    .s7-left::after {
+      content: ''; position: absolute; bottom: -40%; right: -30%;
+      width: 70%; height: 70%;
+      background: radial-gradient(circle, rgba(214,48,49,.2) 0%, transparent 65%);
+    }
+    .s7-left .eyebrow { color: rgba(255,255,255,.5); margin-bottom: .7rem; }
+    .s7-left h2 { color: #fff; margin-bottom: 1rem; }
+    .s7-left p  { color: rgba(255,255,255,.62); max-width: 28ch; }
+    .s7-highlight {
+      margin-top: 2rem; padding: 1.2rem 1.4rem;
+      background: rgba(0,0,0,.3); border-radius: 8px;
+      border-left: 3px solid rgba(255,255,255,.4);
+    }
+    .s7-highlight .hv { font-size: 2rem; font-weight: 900; color: #fff; letter-spacing: -.04em; }
+    .s7-highlight .hl { font-size: .75rem; color: rgba(255,255,255,.5); font-family: 'IBM Plex Mono',monospace; margin-top: .15rem; }
 
-    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-    .donut-svg { overflow: visible; }
-    .donut-legend { width: 100%; }
-    .leg-row { display: flex; align-items: center; gap: .7rem; margin-bottom: .5rem; font-size: .82rem; color: var(--text-2); }
-    .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .s7-right {
+      flex: 1; padding: 3.5rem 4vw; display: flex;
+      flex-direction: column; justify-content: center; background: var(--bg);
+      overflow-y: auto;
+    }
 
-    .contrib-right h3 { margin-bottom: .4rem; }
-    .contrib-right p  { margin-bottom: 1.4rem; font-size: .82rem; max-width: 38ch; }
-    .col-eyebrow { font-family: 'IBM Plex Mono',monospace; font-size: .64rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .8rem; }
+    .grouped-bar-section { margin-bottom: 1.4rem; }
+    .gbs-label {
+      font-family: 'IBM Plex Mono',monospace; font-size: .62rem; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--text-3); margin-bottom: .55rem;
+    }
+    .bar-group { display: flex; align-items: center; gap: .7rem; margin-bottom: .36rem; }
+    .bar-group .bg-model { width: 80px; flex-shrink: 0; font-size: .72rem; color: var(--text-3); text-align: right; font-family: 'IBM Plex Mono',monospace; }
+    .bar-group .bg-track { flex: 1; height: 18px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+    .bar-group .bg-fill  { height: 100%; border-radius: 3px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
+    .bar-group .bg-val   { width: 44px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-2); }
 
     /* ═══════════════════════════════════════════════════
-       SLIDE 8 — LIMITATIONS  (3-column full-height)
+       SLIDE 8 — RECOMMENDATIONS
        ═══════════════════════════════════════════════════ */
-    #s8 { padding: 0; align-items: stretch; }
-    .limit-col {
-      flex: 1; display: flex; flex-direction: column; justify-content: center;
-      padding: 5rem 3.5vw; border-right: 1px solid var(--border);
-    }
-    .limit-col:last-child { border-right: none; }
-    .limit-col:nth-child(1) { background: var(--surface); }
-    .limit-col:nth-child(2) { background: var(--bg-2); }
-    .limit-col:nth-child(3) { background: var(--surface); }
-
-    .limit-icon {
-      font-size: 2rem; margin-bottom: 1.2rem;
-      width: 56px; height: 56px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 12px;
-    }
-    .limit-col:nth-child(1) .limit-icon { background: rgba(169,30,44,.15); }
-    .limit-col:nth-child(2) .limit-icon { background: rgba(230,126,34,.12); }
-    .limit-col:nth-child(3) .limit-icon { background: rgba(83,74,183,.12); }
-
-    .limit-num {
-      font-family: 'IBM Plex Mono',monospace; font-size: 4rem; font-weight: 700;
-      line-height: 1; color: rgba(0,0,0,.05); margin-bottom: .5rem;
-    }
-    .limit-title { font-size: 1rem; font-weight: 700; margin-bottom: .6rem; color: var(--text); }
-    .limit-body  { font-size: .8rem; color: var(--text-2); line-height: 1.7; }
-    .limit-tag   { display: inline-block; margin-top: 1rem; font-family: 'IBM Plex Mono',monospace; font-size: .66rem; color: var(--text-3); border: 1px solid var(--border); border-radius: 3px; padding: .2rem .5rem; }
-
-    /* ═══════════════════════════════════════════════════
-       SLIDE 9 — RECOMMENDATIONS  (numbered hero rows)
-       ═══════════════════════════════════════════════════ */
-    #s9 { padding: 4rem 8vw; flex-direction: column; }
-    #s9 .wrap { width: 100%; max-width: 960px; }
+    #s8 { padding: 4rem 8vw; flex-direction: column; }
+    #s8 .wrap { width: 100%; max-width: 980px; }
 
     .rec-row {
       display: grid; grid-template-columns: 80px 1fr;
       gap: 0; border-bottom: 1px solid var(--border);
-      padding: 1.6rem 0; align-items: start;
+      padding: 1.5rem 0; align-items: start;
     }
-    .rec-row:last-child { border-bottom: none; }
+    .rec-row:last-of-type { border-bottom: none; }
     .rec-n {
       font-size: clamp(2rem,4vw,3rem); font-weight: 900;
       color: rgba(169,30,44,.25); letter-spacing: -.05em; line-height: 1;
@@ -379,190 +397,52 @@
     .rec-body  { font-size: .82rem; color: var(--text-2); line-height: 1.68; max-width: 65ch; }
 
     .bottom-line {
-      margin-top: 2rem; padding: 1rem 1.4rem;
+      margin-top: 1.6rem; padding: 1rem 1.4rem;
       background: rgba(169,30,44,.08); border: 1px solid var(--border-red);
       border-radius: 8px; font-size: .82rem; color: var(--text-2); line-height: 1.65;
     }
     .bottom-line strong { color: var(--red); }
 
-    /* ═══════════════════════════════════════════════════
-       SLIDE 0 — INTRO / HOW IT WORKS
-       ═══════════════════════════════════════════════════ */
-    #s0 {
-      background: var(--bg);
-      flex-direction: column;
-      padding: 3.5rem 8vw;
-      align-items: flex-start;
-    }
-    #s0 .intro-grid {
-      width: 100%; max-width: 1100px;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 3.5rem; margin-top: 2rem; align-items: start;
-    }
-    .agent-pipeline {
-      display: flex; flex-direction: column; gap: .55rem;
-    }
-    .ap-step {
-      display: grid; grid-template-columns: 48px 1fr;
-      gap: 0; position: relative;
-    }
-    .ap-step:not(:last-child)::after {
-      content: ''; position: absolute;
-      left: 23px; top: 44px; width: 2px; height: calc(100% - 2px);
-      background: var(--border);
-    }
-    .ap-icon {
-      width: 46px; height: 46px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; flex-shrink: 0; border: 1px solid var(--border);
-      background: var(--surface); z-index: 1;
-    }
-    .ap-body { padding: .6rem 0 .6rem 1rem; }
-    .ap-name { font-size: .88rem; font-weight: 700; color: var(--text); }
-    .ap-desc { font-size: .76rem; color: var(--text-3); line-height: 1.5; margin-top: .1rem; }
-    .ap-return { font-family: 'IBM Plex Mono',monospace; font-size: .65rem; color: var(--green); margin-top: .2rem; }
+    /* ── Bar chart shared ── */
+    .bar-row { display: flex; align-items: center; gap: .9rem; margin-bottom: .75rem; }
+    .bar-lbl { width: 150px; flex-shrink: 0; font-size: .84rem; font-weight: 500; text-align: right; color: var(--text-2); }
+    .bar-lbl.top { color: var(--text); font-weight: 600; }
+    .bar-track { flex: 1; height: 24px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+    .bar-fill  { height: 100%; border-radius: 4px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
+    .bar-val   { width: 50px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .78rem; color: var(--text-2); }
 
-    .why-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-    }
-    .why-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.1rem 1.2rem;
-    }
-    .why-card .wc-icon { font-size: 1.3rem; margin-bottom: .5rem; }
-    .why-card .wc-title { font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; }
-    .why-card .wc-body  { font-size: .75rem; color: var(--text-2); line-height: 1.6; }
-
-    /* ═══════════════════════════════════════════════════
-       SLIDE EDA — DATA EXPLORATION
-       ═══════════════════════════════════════════════════ */
-    #seda {
-      flex-direction: column; padding: 3rem 7vw;
-      align-items: flex-start;
-    }
-    #seda .eda-grid {
-      width: 100%; max-width: 1100px;
-      display: grid; grid-template-columns: 1.3fr 1fr;
-      gap: 2.5rem; margin-top: 1.5rem;
-    }
-    #seda .eda-left { display: flex; flex-direction: column; gap: 1.5rem; }
-    #seda .eda-right { display: flex; flex-direction: column; gap: 1.5rem; }
-
-    .eda-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.1rem 1.3rem;
-    }
-    .eda-card-title {
-      font-family: 'IBM Plex Mono',monospace; font-size: .64rem;
-      text-transform: uppercase; letter-spacing: .1em;
-      color: var(--text-3); margin-bottom: .8rem;
-    }
-
-    /* Sparkline */
-    .sparkline-svg { width: 100%; height: 80px; display: block; }
-
-    /* Spend bars */
-    .spend-bar-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .45rem; }
-    .spend-bar-lbl { width: 120px; flex-shrink: 0; font-size: .76rem; color: var(--text-2); text-align: right; }
-    .spend-bar-track { flex: 1; height: 14px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
-    .spend-bar-fill  { height: 100%; border-radius: 3px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
-    .spend-bar-val   { width: 44px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-3); }
-
-    /* Anomaly list */
-    .anomaly-row {
-      display: grid; grid-template-columns: 90px 1fr auto;
-      align-items: center; gap: .6rem;
-      padding: .45rem 0; border-bottom: 1px solid var(--border);
-      font-size: .78rem;
-    }
-    .anomaly-row:last-child { border-bottom: none; }
-    .anomaly-date { font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-3); }
-    .anomaly-desc { color: var(--text-2); line-height: 1.4; }
-    .anomaly-z { font-family: 'IBM Plex Mono',monospace; font-size: .72rem;
-      background: rgba(192,18,42,.08); color: var(--red);
-      border: 1px solid rgba(192,18,42,.22); border-radius: 3px; padding: .15rem .4rem; white-space: nowrap; }
-
-    /* Corr dots */
-    .corr-row { display: flex; align-items: center; gap: .7rem; margin-bottom: .4rem; }
-    .corr-lbl { width: 110px; flex-shrink: 0; font-size: .76rem; color: var(--text-2); text-align: right; }
-    .corr-track { flex: 1; height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; position: relative; }
-    .corr-fill { height: 100%; border-radius: 99px; width: 0%; transition: width 1.1s cubic-bezier(.16,1,.3,1); }
-    .corr-val { width: 38px; flex-shrink: 0; font-family: 'IBM Plex Mono',monospace; font-size: .7rem; color: var(--text-3); }
-
-    /* score badge */
-    .readiness-score {
-      display: inline-flex; align-items: center; gap: .5rem;
-      background: rgba(26,128,64,.08); border: 1px solid rgba(26,128,64,.25);
-      border-radius: 6px; padding: .3rem .8rem;
-      font-family: 'IBM Plex Mono',monospace; font-size: .78rem; color: var(--green);
-      margin-bottom: 1rem;
-    }
-
-    /* ── Responsive — tablet & mobile ── */
+    /* ── Responsive ── */
     @media (max-width: 860px) {
-      .kl-flow { grid-template-columns: 1fr 1fr !important; }
-      .kl-flow > [style*="font-size:1.1rem"] { display: none; }
-
-      /* Allow slides taller than viewport to scroll freely */
       html { scroll-snap-type: none; }
       .slide { scroll-snap-align: none; min-height: auto; padding-top: 3rem; padding-bottom: 3rem; overflow: visible; }
       #dots { display: none; }
       #progress { display: none; }
 
-      /* Title */
       #s1 { padding: 3.5rem 6vw; }
       .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem 2rem; padding-top: 1.5rem; }
 
-      /* Intro */
-      #s0 { padding: 3rem 6vw; }
-      #s0 .intro-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .why-grid { grid-template-columns: 1fr 1fr; }
+      #s2 { padding: 3rem 6vw; }
+      .change-grid { grid-template-columns: 1fr; }
 
-      /* EDA */
-      #seda { padding: 3rem 6vw; }
-      #seda .eda-grid { grid-template-columns: 1fr; }
+      #s3 { padding: 3rem 5vw; }
+      .agree-table th, .agree-table td { padding: .55rem .55rem; font-size: .72rem; }
 
-      /* Dataset */
-      #s2 { flex-direction: column; padding: 3rem 6vw; align-items: stretch; }
-      .s2-left { flex: none; width: 100%; padding: 2.5rem 5vw; border-right: none; border-bottom: 1px solid var(--border); }
-      .s2-right { padding: 2.5rem 5vw; grid-template-columns: 1fr 1fr; }
+      #s4 { flex-direction: column; }
+      .s4-left { flex: none; width: 100%; padding: 2.5rem 6vw; }
+      .s4-right { padding: 2.5rem 6vw; }
+      .roi-trio { grid-template-columns: repeat(3,1fr); }
 
-      /* Models */
-      #s3 { padding: 3rem 6vw; }
-      .model-row { grid-template-columns: 1fr 1fr; }
-      .mr-name { grid-column: 1 / -1; border-right: none; border-bottom: 1px solid var(--border); }
-      .mr-mape { grid-column: 1 / -1; text-align: left; border-right: none; border-top: 1px solid var(--border); }
-      .mr-pros { border-bottom: none; }
+      #s5 { padding: 3rem 6vw; }
+      .medium-grid { grid-template-columns: 1fr; }
 
-      /* Tuning */
-      #s4 { padding: 3rem 6vw; }
-      .timeline { gap: .5rem; }
-      .tl-circle { width: 48px; height: 48px; }
-      .mape-trail { flex-wrap: wrap; gap: .4rem; }
-      .trail-note { width: 100%; margin-left: 0; margin-top: .2rem; }
-
-      /* ROI */
-      #s5 { flex-direction: column; }
-      .s5-left { flex: none; width: 100%; padding: 2.5rem 6vw; }
-      .s5-right { padding: 2.5rem 6vw; }
-      .bar-lbl { width: 120px; }
-
-      /* Contributions */
-      #s7 { padding: 3rem 6vw; }
-      #s7 .wrap { grid-template-columns: 1fr; }
-
-      /* Limitations */
-      #s8 { flex-direction: column; }
-      .limit-col { border-right: none; border-bottom: 1px solid var(--border); padding: 2.5rem 6vw; }
-      .limit-col:last-child { border-bottom: none; }
-
-      /* Quote */
       #s6 { padding: 3rem 6vw; }
-      .triple { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-      .triple-divider { display: none; }
+      .model-fit-grid { grid-template-columns: 1fr; }
 
-      /* Recs */
-      #s9 { padding: 3rem 6vw; }
+      #s7 { flex-direction: column; }
+      .s7-left { flex: none; width: 100%; padding: 2.5rem 6vw; }
+      .s7-right { padding: 2.5rem 6vw; }
+
+      #s8 { padding: 3rem 6vw; }
       .rec-n { font-size: 2rem; }
     }
 
@@ -570,24 +450,10 @@
       h1 { font-size: clamp(2.4rem,10vw,3.2rem); }
       h2 { font-size: clamp(1.4rem,5.5vw,2rem); }
       .hero-stats { grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; }
-      .why-grid { grid-template-columns: 1fr; }
-      .s2-right { grid-template-columns: 1fr; }
-      .model-row { grid-template-columns: 1fr; }
-      .mr-pros { border-right: none; border-bottom: 1px solid var(--border); }
-      .timeline { flex-direction: column; align-items: flex-start; gap: 0; }
-      .timeline::before { display: none; }
-      .tl-node { flex-direction: row; align-items: flex-start; gap: .8rem; width: 100%; margin-bottom: .8rem; }
-      .tl-circle { flex-shrink: 0; margin-bottom: 0; }
-      .tl-body { text-align: left; padding: .4rem 0 0 0; }
-      .bar-lbl { width: 90px; font-size: .76rem; }
-      .spend-bar-lbl { width: 90px; font-size: .72rem; }
-      .corr-lbl { width: 90px; font-size: .72rem; }
+      .roi-trio { grid-template-columns: 1fr 1fr; }
       .rec-row { grid-template-columns: 50px 1fr; }
       .rec-n { font-size: 1.6rem; }
-      .triple .n { font-size: 2rem; }
-      #s0 .intro-grid { gap: 1.5rem; }
-      .ap-step { grid-template-columns: 40px 1fr; }
-      .ap-icon { width: 38px; height: 38px; }
+      .model-fit-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-height: 680px) and (min-width: 860px) { #dots { display: none; } }
@@ -606,703 +472,564 @@
      S1 — TITLE
      ═══════════════════════════════════════════════════════════ -->
 <section class="slide" id="s1">
-  <div class="badge r kicker">Round 3 · Critic Approved ✓</div>
+  <div class="badge r kicker">Round 10 · meta_facebook CONFIRMED ✓</div>
   <h1 class="r" style="margin-top:.8rem;">Prism<span>MMM</span></h1>
-  <p class="r" style="margin-top:.9rem;">Autonomous Marketing Mix Modelling — three independent models,<br>five specialist agents, zero manual tuning.</p>
+  <p class="r" style="margin-top:.9rem;">10 rounds of autonomous iteration — three models, five agents, zero manual tuning.<br>First Google channel below CV 30%. meta_facebook stable for 10 rounds.</p>
   <div class="hero-stats r">
-    <div class="hero-stat"><div class="v green">13.1%</div><div class="l">Best Test MAPE</div></div>
-    <div class="hero-stat"><div class="v red">4.0×</div><div class="l">Meta Instagram ROI</div></div>
-    <div class="hero-stat"><div class="v">3</div><div class="l">Rounds Run</div></div>
-    <div class="hero-stat"><div class="v">44%</div><div class="l">MAPE Reduction</div></div>
+    <div class="hero-stat"><div class="v green">1.53×</div><div class="l">meta_facebook ROI (mean)</div></div>
+    <div class="hero-stat"><div class="v amber">1.96×</div><div class="l">meta_instagram ROI (mean)</div></div>
+    <div class="hero-stat"><div class="v">10</div><div class="l">Rounds Complete</div></div>
+    <div class="hero-stat"><div class="v red">3.2%</div><div class="l">meta_facebook CV ✓</div></div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     S0 — INTRO: WHAT IS AUTO-MMM
-     ═══════════════════════════════════════════════════════════ -->
-<section class="slide" id="s0">
-  <div style="width:100%;max-width:1100px;">
-    <div class="eyebrow r">PrismMMM · Architecture</div>
-    <h2 class="r" style="margin-top:.5rem;">Architecture</h2>
-    <p class="r" style="max-width:60ch;margin-top:.5rem;">Five specialist agents coordinate autonomously — no human involvement between rounds. Each agent has a single role so no agent can both produce and approve its own output.</p>
-
-    <div class="intro-grid r">
-      <!-- Left: agent pipeline -->
-      <div>
-        <div class="mr-label" style="margin-bottom:1rem;">The 5-Agent Loop</div>
-        <div class="agent-pipeline">
-          <div class="ap-step">
-            <div class="ap-icon">🔍</div>
-            <div class="ap-body">
-              <div class="ap-name">Data Explorer <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· Round 1 only</span></div>
-              <div class="ap-desc">EDA on raw data — collinearity, anomalies, VIF, readiness score (1–5)</div>
-              <div class="ap-return">→ EXPLORATION_DONE</div>
-            </div>
-          </div>
-          <div class="ap-step">
-            <div class="ap-icon">⚙️</div>
-            <div class="ap-body">
-              <div class="ap-name">Tuner <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· Round 2+</span></div>
-              <div class="ap-desc">Reads prior fit metrics, proposes one config change per round (adstock, Hill slope, samples)</div>
-              <div class="ap-return">→ CONFIG_UPDATED or NO_CHANGE</div>
-            </div>
-          </div>
-          <div class="ap-step">
-            <div class="ap-icon">🧮</div>
-            <div class="ap-body">
-              <div class="ap-name">Models <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· every round</span></div>
-              <div class="ap-desc">Ridge + bootstrap · PyMC Bayesian · LightweightMMM/NNLS — run in sequence, results saved to JSON</div>
-              <div class="ap-return">→ results/latest.json</div>
-            </div>
-          </div>
-          <div class="ap-step">
-            <div class="ap-icon">📊</div>
-            <div class="ap-body">
-              <div class="ap-name">Analyst</div>
-              <div class="ap-desc">ROI rankings, model agreement, contribution plausibility, business narrative — under 400 words</div>
-              <div class="ap-return">→ ANALYSIS_DONE</div>
-            </div>
-          </div>
-          <div class="ap-step">
-            <div class="ap-icon">🔎</div>
-            <div class="ap-body">
-              <div class="ap-name">Critic</div>
-              <div class="ap-desc">6-point quality gate: overfitting, sign correctness, plausibility, consensus honesty, collinearity, sample size</div>
-              <div class="ap-return">→ APPROVED or REVISE</div>
-            </div>
-          </div>
-          <div class="ap-step">
-            <div class="ap-icon">📝</div>
-            <div class="ap-body">
-              <div class="ap-name">Reporter <span style="color:var(--text-3);font-weight:400;font-size:.72rem;">· after APPROVED</span></div>
-              <div class="ap-desc">Plain English for CMO audience — no jargon, no model names in headline. Generates report.md + report.pptx</div>
-              <div class="ap-return">→ REPORT_DONE</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: why this approach -->
-      <div>
-        <div class="mr-label" style="margin-bottom:1rem;">Why Three Models?</div>
-        <div class="why-grid">
-          <div class="why-card">
-            <div class="wc-icon">⚡</div>
-            <div class="wc-title">Ridge</div>
-            <div class="wc-body">Regularised regression + 200-sample bootstrap. Runs in seconds. Always runs — no extra dependencies.</div>
-          </div>
-          <div class="why-card">
-            <div class="wc-icon">🎲</div>
-            <div class="wc-title">PyMC (Bayesian)</div>
-            <div class="wc-body">Full posterior distributions. Handles small samples via priors. Gold standard for production budget decisions.</div>
-          </div>
-          <div class="why-card" style="grid-column:1/-1;">
-            <div class="wc-icon">✅</div>
-            <div class="wc-title">LightweightMMM / NNLS</div>
-            <div class="wc-body">Positive-constrained estimates — no negative ROI. JAX-accelerated when available, NNLS fallback otherwise.</div>
-          </div>
-          <div class="why-card" style="grid-column:1/-1; border-color:var(--border-red); background:rgba(169,30,44,.05);">
-            <div class="wc-icon">🎯</div>
-            <div class="wc-title">Agreement = confidence. Disagreement = diagnostic.</div>
-            <div class="wc-body">Where all three agree on a channel, act with confidence. Where they disagree — that's the model telling you the data is thin, channels are collinear, or an assumption is wrong. No single model can tell you this.</div>
-          </div>
-        </div>
-        <div style="margin-top:1.2rem;padding:.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
-          <div class="eyebrow" style="margin-bottom:.4rem;">To run</div>
-          <code style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--green);">Read program.md and run the loop.</code>
-        </div>
-      </div>
-    </div>
-
-    <!-- Knowledge Layer -->
-    <div class="r" style="margin-top:1.8rem; width:100%;">
-      <div class="mr-label" style="margin-bottom:.9rem;">Notion Knowledge Layer</div>
-      <div class="kl-flow" style="display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; gap:.6rem;">
-
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:.9rem 1.1rem;">
-          <div style="font-size:.72rem; font-family:'IBM Plex Mono',monospace; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.5rem;">Notion</div>
-          <div style="font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:.3rem;">3 Databases</div>
-          <div style="font-size:.72rem; color:var(--text-2); line-height:1.6;">Field Definitions<br>Business Context<br>Known Issues</div>
-        </div>
-
-        <div style="font-size:1.1rem; color:var(--text-3);">→</div>
-
-        <div style="background:var(--surface); border:1px solid var(--border-red); border-radius:10px; padding:.9rem 1.1rem;">
-          <div style="font-size:.72rem; font-family:'IBM Plex Mono',monospace; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.5rem;">discover.py</div>
-          <div style="font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:.3rem;">Auto-profiling</div>
-          <div style="font-size:.72rem; color:var(--text-2); line-height:1.6;">Detects columns<br>Pulls Notion context<br>Generates config</div>
-        </div>
-
-        <div style="font-size:1.1rem; color:var(--text-3);">→</div>
-
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:.9rem 1.1rem;">
-          <div style="font-size:.72rem; font-family:'IBM Plex Mono',monospace; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.5rem;">metadata.json</div>
-          <div style="font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:.3rem;">Shared Context</div>
-          <div style="font-size:.72rem; color:var(--text-2); line-height:1.6;">Expected ROI ranges<br>Seasonality notes<br>Data quality flags</div>
-        </div>
-
-        <div style="font-size:1.1rem; color:var(--text-3);">→</div>
-
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:.9rem 1.1rem;">
-          <div style="font-size:.72rem; font-family:'IBM Plex Mono',monospace; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.5rem;">All 5 Agents</div>
-          <div style="font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:.3rem;">Live Knowledge</div>
-          <div style="font-size:.72rem; color:var(--text-2); line-height:1.6;">No code changes<br>Business teams update<br>Notion directly</div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SEDA — DATA EXPLORATION
-     ═══════════════════════════════════════════════════════════ -->
-<section class="slide" id="seda">
-  <div style="width:100%;max-width:1100px;">
-    <div class="eyebrow r">Data Explorer · Round 1</div>
-    <h2 class="r" style="margin-top:.4rem;">EDA before any model training</h2>
-    <div class="readiness-score r">✅ Readiness Score: 4 / 5 — 132 weekly periods · 0 missing values · no severe collinearity</div>
-
-    <div class="eda-grid">
-      <!-- LEFT COLUMN -->
-      <div class="eda-left">
-
-        <!-- KPI sparkline -->
-        <div class="eda-card r">
-          <div class="eda-card-title">Revenue over time (weekly, USD)</div>
-          <svg class="sparkline-svg" id="kpi-spark" viewBox="0 0 500 80" preserveAspectRatio="none"></svg>
-          <p style="font-size:.72rem;color:var(--text-3);margin-top:.5rem;">Mean $30.3M · Max $114M (holiday spikes) · CV 67% — right-skewed, seasonal pattern</p>
-        </div>
-
-        <!-- Channel spend bars -->
-        <div class="eda-card r">
-          <div class="eda-card-title">Total spend by channel (2021–2024)</div>
-          <div id="spend-bars"></div>
-        </div>
-
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="eda-right">
-
-        <!-- Anomalies -->
-        <div class="eda-card r">
-          <div class="eda-card-title">Anomalies detected</div>
-          <div class="anomaly-row">
-            <div class="anomaly-date">2022-05-30</div>
-            <div class="anomaly-desc">Revenue $114M + google_shopping spend spike — synchronized outlier, likely promo event</div>
-            <div class="anomaly-z">z = 4.1σ</div>
-          </div>
-          <div class="anomaly-row">
-            <div class="anomaly-date">2023-05-29</div>
-            <div class="anomaly-desc">Revenue $113M — possible annual promotional period</div>
-            <div class="anomaly-z">z = 4.1σ</div>
-          </div>
-          <div class="anomaly-row">
-            <div class="anomaly-date">2023-12-11</div>
-            <div class="anomaly-desc">Revenue $104M — holiday season spike</div>
-            <div class="anomaly-z">z = 3.6σ</div>
-          </div>
-          <div class="anomaly-row">
-            <div class="anomaly-date">2023-05-22</div>
-            <div class="anomaly-desc">Revenue $95M — keep with flag</div>
-            <div class="anomaly-z">z = 3.2σ</div>
-          </div>
-        </div>
-
-        <!-- Correlation with KPI -->
-        <div class="eda-card r">
-          <div class="eda-card-title">Channel correlation with revenue (Pearson r)</div>
-          <div id="corr-bars"></div>
-          <p style="font-size:.72rem;color:var(--text-3);margin-top:.6rem;">google_display (r=0.02) and google_video (r=−0.05) show near-zero KPI correlation — low identifiability.</p>
-        </div>
-
-        <!-- Key flags -->
-        <div class="eda-card r" style="border-color:rgba(169,30,44,.3);background:rgba(169,30,44,.04);">
-          <div class="eda-card-title">Flags before modelling</div>
-          <div style="font-size:.78rem;color:var(--text-2);line-height:1.8;">
-            <div>⚠️ <strong style="color:var(--text);">google_shopping</strong> — 76.5% zero-spend weeks · sparse · may not be identifiable</div>
-            <div>⚠️ <strong style="color:var(--text);">2022-05-30</strong> — add binary event indicator before attribution</div>
-            <div>✅ No severe collinearity · max VIF 6.57 · no channel pair |r| &gt; 0.7</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     S2 — DATASET
+     S2 — WHAT CHANGED IN R10
      ═══════════════════════════════════════════════════════════ -->
 <section class="slide" id="s2">
-  <div class="s2-left">
-    <div class="eyebrow r">01 — The Dataset</div>
-    <h2 class="r">Conjura<br>eCommerce MMM</h2>
-    <p class="r" style="margin-top:.6rem;">Weekly spend and revenue across 8 Google + Meta channels for an Apparel brand. KPI: first-purchase revenue in USD.</p>
-    <p class="r" style="margin-top:1rem; font-size:.8rem; color:var(--text-3);">Source: Figshare · Multi-Region MMM Dataset · 93 brands</p>
-  </div>
-  <div class="s2-right">
-    <div class="big-stat r">
-      <div class="n" style="color:var(--text);">132</div>
-      <div class="d">Weekly observations<br>128 train · 4 holdout</div>
-    </div>
-    <div class="big-stat r">
-      <div class="n o">8</div>
-      <div class="d">Media channels<br>Google Search, Shopping, PMax, Display, Video · Meta FB, IG, Other</div>
-    </div>
-    <div class="big-stat r">
-      <div class="n g">$30M</div>
-      <div class="d">Average weekly revenue<br>USD — peak $114M (holiday)</div>
-    </div>
-    <div class="big-stat warn r">
-      <div class="n">5</div>
-      <div class="d">Revenue anomalies flagged<br>Seasonal spikes · z &gt; 3σ · May &amp; Dec peaks</div>
+  <div class="wrap">
+    <div class="eyebrow r">Round 10 · Changes</div>
+    <h2 class="r" style="margin-top:.5rem;">What changed in Round 10</h2>
+    <p class="r" style="max-width:60ch;margin-top:.4rem;">One targeted prior change to address PyMC prior dominance — and it moved three channels meaningfully.</p>
+
+    <div class="change-grid">
+
+      <div class="change-card highlight r">
+        <div class="cc-label">Key Fix</div>
+        <div class="cc-title">Tightened PyMC saturation_beta prior</div>
+        <div class="cc-body">
+          PyMC's Hill saturation prior was <code>HalfNormal(σ=1.5)</code> — too wide, allowing unrealistic saturation shapes that inflated channel ROIs. Changed to <code>HalfNormal(σ=0.5)</code>, reducing prior dominance over sparse channel data.
+        </div>
+        <div style="margin-top:.8rem;">
+          <span class="cv-pill bad">Before: HalfNormal(1.5)</span>
+          <span style="margin:0 .3rem;color:var(--text-3);">→</span>
+          <span class="cv-pill good">After: HalfNormal(0.5)</span>
+        </div>
+      </div>
+
+      <div class="change-card r">
+        <div class="cc-label">Effect on meta_instagram</div>
+        <div class="cc-title">CV 41.4% → 35.6% — promoted to medium signal</div>
+        <div class="cc-body">
+          Tighter saturation prior reduced PyMC's outlier estimate for instagram, bringing it into closer agreement with Ridge and BayesianRidge. Cross-model variance is still above 30% but improving steadily.
+        </div>
+        <div style="margin-top:.8rem;">
+          <span class="cv-pill bad">R9: 41.4% ⚠️ WEAK</span>
+          <span style="margin:0 .3rem;color:var(--text-3);">→</span>
+          <span class="cv-pill ok">R10: 35.6% MEDIUM</span>
+        </div>
+      </div>
+
+      <div class="change-card r">
+        <div class="cc-label">Effect on google_search</div>
+        <div class="cc-title">CV 61.0% → 28.1% — first Google below 30%</div>
+        <div class="cc-body">
+          google_search is the first Google channel to achieve cross-model agreement below 30% CV. Ridge 40.1×, PyMC 48.6×, BayesianRidge 23.3× — still high absolute ROI (efficiency spend at low total volume) but directional consensus is now present.
+        </div>
+        <div style="margin-top:.8rem;">
+          <span class="cv-pill bad">R9: 61.0% ❌</span>
+          <span style="margin:0 .3rem;color:var(--text-3);">→</span>
+          <span class="cv-pill ok">R10: 28.1% MEDIUM</span>
+        </div>
+      </div>
+
+      <div class="change-card r">
+        <div class="cc-label">Still uncertain</div>
+        <div class="cc-title">Google Shopping, PMax, Display, Video</div>
+        <div class="cc-body">
+          google_shopping CV 119.7% with one model at 230× (PyMC) vs 9.6× (BayesianRidge) — prior dominance still present for sparse-spend channels. google_pmax/display/video retain sign disagreements across models. No action warranted on these channels.
+        </div>
+        <div style="margin-top:.8rem;">
+          <span class="cv-pill bad">4 channels still ❌</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     S3 — THREE MODELS
+     S3 — CROSS-MODEL AGREEMENT TABLE
      ═══════════════════════════════════════════════════════════ -->
 <section class="slide" id="s3">
-  <div class="header">
-    <div class="eyebrow r">02 — Three Models</div>
-    <h2 class="r" style="margin-top:.5rem;">Each model has a different blind spot</h2>
-    <p class="r" style="margin-top:.4rem; max-width:60ch;">Agreement is signal. Disagreement is a diagnostic. Running all three is the only way to know which result to trust.</p>
-  </div>
+  <div class="inner">
+    <div class="eyebrow r">Round 10 · All Channels</div>
+    <h2 class="r" style="margin-top:.5rem;">Cross-model agreement summary</h2>
+    <p class="r" style="margin-top:.4rem;max-width:65ch;">CV (coefficient of variation across 3 model ROIs) measures how much models agree. Under 10% = act. Under 40% = watch. Over 40% = do not act.</p>
 
-  <div class="model-row r" style="border-top-color:#5BA3D9;">
-    <div class="mr-name">
-      <h3>Ridge</h3>
-      <div class="tag">frequentist · L2 regularisation</div>
-    </div>
-    <div class="mr-pros">
-      <div class="mr-label">Strengths</div>
-      <div class="pro">Fast, runs in seconds</div>
-      <div class="pro">Best out-of-sample MAPE this run</div>
-    </div>
-    <div class="mr-cons">
-      <div class="mr-label">Limitations</div>
-      <div class="con">Alpha=109.85 zeroed all channel coefficients</div>
-      <div class="con">Baseline-only model — no channel signal</div>
-    </div>
-    <div class="mr-mape">
-      <div class="mape-n" style="color:var(--green);">13.1%</div>
-      <div class="mape-l">Test MAPE · R²=0.46</div>
-    </div>
-  </div>
-
-  <div class="model-row r" style="border-top-color:var(--green);" >
-    <div class="mr-name">
-      <h3>NNLS</h3>
-      <div class="tag">non-negative least squares · fallback</div>
-    </div>
-    <div class="mr-pros">
-      <div class="mr-label">Strengths</div>
-      <div class="pro">Only model producing channel-level ROI</div>
-      <div class="pro">Enforces positive attribution</div>
-    </div>
-    <div class="mr-cons">
-      <div class="mr-label">Limitations</div>
-      <div class="con">No uncertainty bounds</div>
-      <div class="con">Sensitive to outlier spend weeks</div>
-    </div>
-    <div class="mr-mape">
-      <div class="mape-n" style="color:var(--green);">13.1%</div>
-      <div class="mape-l">Test MAPE · R²=0.46</div>
-    </div>
-  </div>
-
-  <div class="model-row r" style="border-top-color:var(--red-light);" >
-    <div class="mr-name">
-      <h3>PyMC</h3>
-      <div class="tag">bayesian · fallback BLM</div>
-    </div>
-    <div class="mr-pros">
-      <div class="mr-label">Strengths</div>
-      <div class="pro">Principled uncertainty quantification</div>
-      <div class="pro">HalfNormal priors constrain positivity</div>
-    </div>
-    <div class="mr-cons">
-      <div class="mr-label">Limitations</div>
-      <div class="con">Full MMM timed out — no C compiler</div>
-      <div class="con">Fallback BLM gives zero channel ROI</div>
-    </div>
-    <div class="mr-mape">
-      <div class="mape-n" style="color:var(--green);">13.1%</div>
-      <div class="mape-l">Test MAPE · R²=0.46</div>
-    </div>
+    <table class="agree-table r">
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>Ridge ROI</th>
+          <th>PyMC ROI</th>
+          <th>BayesianRidge ROI</th>
+          <th>Mean ROI</th>
+          <th>CV</th>
+          <th>Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="top-row">
+          <td>meta_facebook</td>
+          <td>1.48</td>
+          <td>1.52</td>
+          <td>1.60</td>
+          <td>1.53</td>
+          <td class="cv-cell good">3.2%</td>
+          <td><span class="status-chip confirmed">✓ Confirmed</span></td>
+        </tr>
+        <tr>
+          <td>meta_instagram</td>
+          <td>1.30</td>
+          <td>2.92</td>
+          <td>1.65</td>
+          <td>1.96</td>
+          <td class="cv-cell ok">35.6%</td>
+          <td><span class="status-chip medium">⚠ Medium</span></td>
+        </tr>
+        <tr>
+          <td>google_search</td>
+          <td>40.1</td>
+          <td>48.6</td>
+          <td>23.3</td>
+          <td>37.3</td>
+          <td class="cv-cell ok">28.1%</td>
+          <td><span class="status-chip medium">⚠ Medium</span></td>
+        </tr>
+        <tr>
+          <td>google_shopping</td>
+          <td>16.7</td>
+          <td>230.1</td>
+          <td>9.6</td>
+          <td>—</td>
+          <td class="cv-cell bad">119.7%</td>
+          <td><span class="status-chip uncertain">❌ Uncertain</span></td>
+        </tr>
+        <tr>
+          <td>google_pmax</td>
+          <td colspan="3" style="text-align:center;font-size:.74rem;color:var(--text-3);">Sign disagreement across models</td>
+          <td>—</td>
+          <td class="cv-cell bad">—</td>
+          <td><span class="status-chip uncertain">❌ Uncertain</span></td>
+        </tr>
+        <tr>
+          <td>google_display</td>
+          <td colspan="3" style="text-align:center;font-size:.74rem;color:var(--text-3);">Sign disagreement across models</td>
+          <td>—</td>
+          <td class="cv-cell bad">—</td>
+          <td><span class="status-chip uncertain">❌ Uncertain</span></td>
+        </tr>
+        <tr>
+          <td>google_video</td>
+          <td colspan="3" style="text-align:center;font-size:.74rem;color:var(--text-3);">Sign disagreement across models</td>
+          <td>—</td>
+          <td class="cv-cell bad">—</td>
+          <td><span class="status-chip uncertain">❌ Uncertain</span></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     S4 — TUNING HISTORY
+     S4 — meta_facebook DEEP DIVE
      ═══════════════════════════════════════════════════════════ -->
 <section class="slide" id="s4">
-  <div class="wrap">
-    <div class="eyebrow r">03 — Autonomous Tuning</div>
-    <h2 class="r" style="margin-top:.5rem; margin-bottom:.5rem;">Three rounds, one change per round</h2>
-    <p class="r" style="max-width:58ch; margin-bottom:1.8rem;">The Tuner reads fit metrics, picks one parameter to change, models re-run, the Critic approves or requests revision before the next round starts.</p>
+  <div class="s4-left">
+    <div class="eyebrow r">meta_facebook · Round 10</div>
+    <h2 class="r">10 rounds.<br>One confirmed<br>channel.</h2>
+    <p class="r">meta_facebook is the only channel with stable cross-model ROI agreement across all 10 rounds. CV 3.2% — the tightest in the project history.</p>
+    <div class="s4-highlight r">
+      <div class="hv">1.53×</div>
+      <div class="hl">Cross-model mean ROI · Round 10</div>
+    </div>
+  </div>
+  <div class="s4-right">
+    <div class="eyebrow" style="margin-bottom:.8rem;">CV History — meta_facebook (lower = more agreement)</div>
 
-    <div class="timeline r">
-      <div class="tl-node">
-        <div class="tl-circle">
-          <div class="rnum">R1</div>
-          <div class="rmape">23.2%</div>
-        </div>
-        <div class="tl-body">
-          <div class="change">Baseline<br>lag=2 · slope=1.5</div>
-          <div class="verdict"><span class="badge" style="font-size:.6rem;">APPROVED</span></div>
-        </div>
+    <div class="cv-timeline r">
+      <div class="cvt-node">
+        <div class="cvt-dot warn"><div class="rn">R7</div><div class="cv">6.5%</div></div>
+        <div class="cvt-label">R7</div>
       </div>
-      <div class="tl-node">
-        <div class="tl-circle">
-          <div class="rnum">R2</div>
-          <div class="rmape">20.4%</div>
-        </div>
-        <div class="tl-body">
-          <div class="change">adstock lag<br>2 → 1 <span class="delta-g">▼12%</span></div>
-          <div class="verdict"><span class="badge" style="font-size:.6rem;">APPROVED</span></div>
-        </div>
+      <div class="cvt-node">
+        <div class="cvt-dot warn" style="border-color:rgba(192,18,42,.5);background:rgba(192,18,42,.1);"><div class="rn">R8</div><div class="cv" style="color:var(--red-light);">55.6%</div></div>
+        <div class="cvt-label">R8 ⚠</div>
       </div>
-      <div class="tl-node">
-        <div class="tl-circle best">
-          <div class="rnum">R3</div>
-          <div class="rmape">13.1%</div>
-        </div>
-        <div class="tl-body">
-          <div class="change">hill_ec<br>0.5 → 0.3 <span class="delta-g">▼36%</span></div>
-          <div class="verdict"><span class="badge green" style="font-size:.6rem;">APPROVED ✓</span></div>
-        </div>
+      <div class="cvt-node">
+        <div class="cvt-dot"><div class="rn">R9</div><div class="cv" style="color:var(--green);">4.5%</div></div>
+        <div class="cvt-label">R9</div>
+      </div>
+      <div class="cvt-node">
+        <div class="cvt-dot best"><div class="rn">R10</div><div class="cv">3.2%</div></div>
+        <div class="cvt-label">R10 ✓</div>
       </div>
     </div>
 
-    <div class="mape-trail r">
-      <span class="trail-label">Best MAPE</span>
-      <span class="trail-node">23.2%</span>
-      <span class="trail-arrow">→</span>
-      <span class="trail-node">20.4%</span>
-      <span class="trail-arrow">→</span>
-      <span class="trail-node best">13.1% ✓</span>
-      <span class="trail-note">— 43% total reduction · PyMC best model · 3 rounds</span>
+    <div style="font-size:.76rem;color:var(--text-3);margin-bottom:1.4rem;line-height:1.6;">
+      R8 spike (55.6%) was a broken config — corrected in R9. R10 reaches new project low of 3.2%.
+    </div>
+
+    <div class="eyebrow" style="margin-bottom:.8rem;">Round 10 ROI by model</div>
+    <div class="roi-trio r">
+      <div class="roi-trio-card">
+        <div class="model-name">Ridge</div>
+        <div class="roi-val">1.48×</div>
+      </div>
+      <div class="roi-trio-card">
+        <div class="model-name">PyMC</div>
+        <div class="roi-val">1.52×</div>
+      </div>
+      <div class="roi-trio-card">
+        <div class="model-name">BayesianRidge</div>
+        <div class="roi-val">1.60×</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.2rem;padding:.8rem 1rem;background:var(--surface);border:1px solid rgba(26,128,64,.25);border-radius:8px;font-size:.78rem;color:var(--text-2);line-height:1.65;" class="r">
+      <strong style="color:var(--green);">Contribution (media share):</strong> Ridge 35.81% · PyMC 24.65% · BayesianRidge 38.74% — all models attribute the largest media share to meta_facebook.
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     S5 — CHANNEL ROI
+     S5 — meta_instagram + google_search (MEDIUM SIGNALS)
      ═══════════════════════════════════════════════════════════ -->
 <section class="slide" id="s5">
-  <div class="s5-left">
-    <div class="eyebrow r" style="color:rgba(255,255,255,.55);">04 — Channel ROI</div>
-    <h2 class="r">Meta dominates.<br>Two models agree.</h2>
-    <p class="r">First cross-model signal: Ridge and NNLS both rank Meta Facebook #1 and Meta Instagram #2. ROI shown is NNLS; Ridge values are similar.</p>
-    <div class="s5-highlight r">
-      <div class="hv">2.9×</div>
-      <div class="hl">Meta Instagram ROI · NNLS · Round 3</div>
-    </div>
-  </div>
-  <div class="s5-right">
-    <div id="roi-chart"></div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     S6 — AFFILIATES FINDING
-     ═══════════════════════════════════════════════════════════ -->
-<section class="slide" id="s6">
-  <div class="q-overline r"></div>
-  <div class="q-text r"><em>Meta</em> confirmed<br>by <em>two</em><br>models.</div>
-  <div class="q-sub r">Meta Facebook 37–42% · Meta Instagram 10–20% · Ridge + NNLS agree · Round 3</div>
-  <div class="triple r">
-    <div class="triple-item" style="text-align:center;">
-      <div class="n">1.7×</div>
-      <div class="d">Meta Facebook ROI (cross-model mean)</div>
-    </div>
-    <div class="triple-divider"></div>
-    <div class="triple-item" style="text-align:center;">
-      <div class="n">47–62%</div>
-      <div class="d">Meta revenue share across models</div>
-    </div>
-    <div class="triple-divider"></div>
-    <div class="triple-item" style="text-align:center;">
-      <div class="n">2.9×</div>
-      <div class="d">Meta Instagram ROI · best channel</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     S7 — CONTRIBUTIONS
-     ═══════════════════════════════════════════════════════════ -->
-<section class="slide" id="s7">
   <div class="wrap">
-    <div style="width:100%; max-width:1080px; margin-bottom:1.8rem;">
-      <div class="eyebrow r">05 — Contribution Breakdown</div>
-      <h2 class="r" style="margin-top:.5rem;">How each model attributes GMV</h2>
-    </div>
-    <div style="width:100%; max-width:1080px; display:grid; grid-template-columns:1fr 1.4fr; gap:3.5rem; align-items:start;">
-      <div class="r">
-        <!-- SVG Donut — NNLS -->
-        <div class="col-eyebrow">NNLS Contribution (Round 3)</div>
-        <svg class="donut-svg" viewBox="0 0 180 180" width="180" height="180" style="display:block; margin:0 auto 1.2rem;">
-          <!-- Baseline / organic ~33% (grey) -->
-          <circle cx="90" cy="90" r="60" fill="none" stroke="#d8d8e4" stroke-width="28"
-            stroke-dasharray="376.99" stroke-dashoffset="0" transform="rotate(-90 90 90)"/>
-          <!-- Meta Facebook 42.47% = 160.1 -->
-          <circle cx="90" cy="90" r="60" fill="none" stroke="#A91E2C" stroke-width="28"
-            stroke-dasharray="160.09 216.90" stroke-dashoffset="0" transform="rotate(-90 90 90)"/>
-          <!-- Meta Instagram 20.05% = 75.5 -->
-          <circle cx="90" cy="90" r="60" fill="none" stroke="#D63031" stroke-width="28"
-            stroke-dasharray="75.54 301.45" stroke-dashoffset="-160.09" transform="rotate(-90 90 90)"/>
-          <!-- Google Shopping 4.52% = 17.0 -->
-          <circle cx="90" cy="90" r="60" fill="none" stroke="#c06060" stroke-width="28"
-            stroke-dasharray="17.04 359.95" stroke-dashoffset="-235.63" transform="rotate(-90 90 90)"/>
-          <text x="90" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="800" fill="#0a0a12">67%</text>
-          <text x="90" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="rgba(10,10,18,.4)">MEDIA SHARE</text>
-        </svg>
-        <div class="donut-legend">
-          <div class="leg-row"><div class="leg-dot" style="background:#A91E2C;"></div>Meta Facebook — 42.5%</div>
-          <div class="leg-row"><div class="leg-dot" style="background:#D63031;"></div>Meta Instagram — 20.1%</div>
-          <div class="leg-row"><div class="leg-dot" style="background:#c06060;"></div>Google Shopping — 4.5%</div>
-          <div class="leg-row"><div class="leg-dot" style="background:#d0d0da;"></div>Baseline / Organic — 33%</div>
+    <div class="eyebrow r">Round 10 · Medium Signals</div>
+    <h2 class="r" style="margin-top:.5rem;">Two channels promoted to medium signal</h2>
+    <p class="r" style="max-width:60ch;margin-top:.4rem;">Not yet actionable, but both channels show improving CV trend. Directional findings only — watch, do not reallocate.</p>
+
+    <div class="medium-grid">
+
+      <!-- meta_instagram -->
+      <div class="medium-card r">
+        <div class="medium-card-header">
+          <h3>meta_instagram</h3>
+          <span class="status-chip medium">⚠ Medium — CV 35.6%</span>
+        </div>
+        <div class="medium-card-body">
+          <p>PyMC (2.92×) still diverges from Ridge (1.30×) and BayesianRidge (1.65×) — the tighter saturation prior reduced but did not eliminate the spread. Mean ROI 1.96× is promising but the confidence interval is too wide for budget decisions.</p>
+
+          <div class="eyebrow" style="margin-bottom:.6rem;">ROI by model</div>
+          <div class="roi-row-sm r">
+            <div class="model-tag">Ridge</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill" data-pct="45" style="background:#5BA3D9;"></div></div>
+            <div class="roi-num">1.30</div>
+          </div>
+          <div class="roi-row-sm r">
+            <div class="model-tag">PyMC</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill" data-pct="100" style="background:#A91E2C;"></div></div>
+            <div class="roi-num">2.92</div>
+          </div>
+          <div class="roi-row-sm r">
+            <div class="model-tag">BayesianRidge</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill" data-pct="57" style="background:#D63031;"></div></div>
+            <div class="roi-num">1.65</div>
+          </div>
+
+          <div class="cv-history-row r">
+            <div class="ch-label">CV history</div>
+            <span class="cv-pill-sm bad">R7: 34.5%</span>
+            <span class="ch-arrow">→</span>
+            <span class="cv-pill-sm bad">R8: 44.8%</span>
+            <span class="ch-arrow">→</span>
+            <span class="cv-pill-sm bad">R9: 41.4%</span>
+            <span class="ch-arrow">→</span>
+            <span class="cv-pill-sm ok">R10: 35.6%</span>
+          </div>
+
+          <div style="margin-top:.8rem;padding:.55rem .75rem;background:var(--surface);border-radius:6px;font-size:.74rem;color:var(--text-2);line-height:1.6;">
+            Contribution: Ridge 9.69% · PyMC 14.71% · BayesianRidge 12.34%
+          </div>
         </div>
       </div>
 
-      <div class="contrib-right r">
-        <h3 style="margin-bottom:.4rem;">First cross-model signal</h3>
-        <p style="margin-bottom:1.4rem; font-size:.85rem;">Ridge and NNLS now both attribute positive revenue to Meta Facebook and Meta Instagram — the first agreement across two models. Ridge adds Google Search (19.5%) which NNLS misses. PyMC fallback still returns zero channel attribution. Google Display (−12.8%) and Google Video (−2.6%) show negative Ridge contributions — a sign-confounding artefact from correlated spend, not a real negative effect.</p>
+      <!-- google_search -->
+      <div class="medium-card r">
+        <div class="medium-card-header">
+          <h3>google_search</h3>
+          <span class="status-chip medium">⚠ Medium — CV 28.1%</span>
+        </div>
+        <div class="medium-card-body">
+          <p>First Google channel below CV 50%. High absolute ROI (37.3× mean) reflects low total spend — small budget extracting high efficiency. Directional signal is emerging: all three models rank google_search above other Google channels.</p>
 
-        <div class="col-eyebrow" style="margin-bottom:.8rem;">Ridge Contribution</div>
-        <div id="ridge-contrib-s7"></div>
+          <div class="eyebrow" style="margin-bottom:.6rem;">ROI by model</div>
+          <div class="roi-row-sm r">
+            <div class="model-tag">Ridge</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill" data-pct="82" style="background:#5BA3D9;"></div></div>
+            <div class="roi-num">40.1</div>
+          </div>
+          <div class="roi-row-sm r">
+            <div class="model-tag">PyMC</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill" data-pct="100" style="background:#A91E2C;"></div></div>
+            <div class="roi-num">48.6</div>
+          </div>
+          <div class="roi-row-sm r">
+            <div class="model-tag">BayesianRidge</div>
+            <div class="roi-bar-track"><div class="roi-bar-fill" data-pct="48" style="background:#D63031;"></div></div>
+            <div class="roi-num">23.3</div>
+          </div>
 
-        <div class="col-eyebrow" style="margin-top:1.4rem; margin-bottom:.8rem;">NNLS Contribution</div>
-        <div id="nnls-contrib-s7"></div>
+          <div class="cv-history-row r">
+            <div class="ch-label">CV history</div>
+            <span class="cv-pill-sm bad">R7: 105%</span>
+            <span class="ch-arrow">→</span>
+            <span class="cv-pill-sm ok">R8: 23%</span>
+            <span class="ch-arrow">→</span>
+            <span class="cv-pill-sm bad">R9: 61%</span>
+            <span class="ch-arrow">→</span>
+            <span class="cv-pill-sm ok">R10: 28.1%</span>
+          </div>
+
+          <div style="margin-top:.8rem;padding:.55rem .75rem;background:var(--surface);border-radius:6px;font-size:.74rem;color:var(--text-2);line-height:1.6;">
+            Contribution: Ridge 21.82% · PyMC 22.1% · BayesianRidge 12.7%
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     S8 — LIMITATIONS
+     S6 — MODEL FIT COMPARISON
      ═══════════════════════════════════════════════════════════ -->
-<section class="slide" id="s8">
-  <div class="limit-col">
-    <div class="limit-num r">01</div>
-    <div class="limit-icon r">⚠️</div>
-    <div class="limit-title r">Outlier Spend Week</div>
-    <div class="limit-body r">2022-05-30: google_shopping spend spiked z=10.2σ, revenue spiked z=4.1σ in the same week. NNLS attributes the full revenue uplift to google_shopping, inflating its ROI to 22.3. This is almost certainly a data artifact — not a real response curve. Add an event indicator before trusting that estimate.</div>
-    <div class="limit-tag r">Needs event flag</div>
-  </div>
-  <div class="limit-col">
-    <div class="limit-num r">02</div>
-    <div class="limit-icon r">🧮</div>
-    <div class="limit-title r">Only One Model Has Signal</div>
-    <div class="limit-body r">Ridge (alpha=109.85) and PyMC fallback both zero all channel coefficients. Only NNLS produces channel attribution — making cross-model agreement structurally impossible. Install gcc for PyMC's full MMM and fix Ridge's regularisation before trusting any ROI ranking.</div>
-    <div class="limit-tag r">3 models needed</div>
-  </div>
-  <div class="limit-col">
-    <div class="limit-num r">03</div>
-    <div class="limit-icon r">📉</div>
-    <div class="limit-title r">4-Period Holdout</div>
-    <div class="limit-body r">Test MAPE is calculated on just 4 weeks. A single outlier week (holiday season, promo) can swing MAPE by 5–10 percentage points. Expand holdout to 8–13 weeks (one full quarter) for reliable out-of-sample evaluation.</div>
-    <div class="limit-tag r">Expand holdout</div>
+<section class="slide" id="s6">
+  <div class="wrap">
+    <div class="eyebrow r">Round 10 · Model Fit</div>
+    <h2 class="r" style="margin-top:.5rem;">Three models, three fit profiles</h2>
+    <p class="r" style="max-width:65ch;margin-top:.4rem;">No single model wins on all metrics. Bayesian (PyMC) fits training data best but overfits. BayesianRidge generalises best out-of-sample. Ridge is weakest on fit but fastest sanity-check.</p>
+
+    <div class="model-fit-grid">
+
+      <div class="fit-card r">
+        <div class="fit-card-top">
+          <h3>Ridge</h3>
+          <div class="fc-tag">frequentist · L2 regularisation</div>
+        </div>
+        <div class="fit-card-body">
+          <div class="fit-metric">
+            <div class="fm-lbl">R²</div>
+            <div class="fm-val bad">0.35</div>
+          </div>
+          <div class="fit-metric">
+            <div class="fm-lbl">Train MAPE</div>
+            <div class="fm-val bad">39%</div>
+          </div>
+          <div class="fit-metric">
+            <div class="fm-lbl">Test MAPE</div>
+            <div class="fm-val ok">23.2%</div>
+          </div>
+          <div class="fit-note">
+            Underfits training data (R²=0.35). Reasonable out-of-sample performance — regularisation prevents overfitting but limits in-sample signal.
+          </div>
+        </div>
+      </div>
+
+      <div class="fit-card r">
+        <div class="fit-card-top">
+          <h3>PyMC (Bayesian)</h3>
+          <div class="fc-tag">full posterior · HalfNormal priors</div>
+        </div>
+        <div class="fit-card-body">
+          <div class="fit-metric">
+            <div class="fm-lbl">R²</div>
+            <div class="fm-val good">0.80</div>
+          </div>
+          <div class="fit-metric">
+            <div class="fm-lbl">Train MAPE</div>
+            <div class="fm-val good">23%</div>
+          </div>
+          <div class="fit-metric">
+            <div class="fm-lbl">Test MAPE</div>
+            <div class="fm-val bad">42.8%</div>
+          </div>
+          <div class="fit-note warn">
+            27 divergences noted in R10 sampling. Overfits training set — test MAPE 42.8% is the worst of the three. Good channel-level signal despite fit concerns.
+          </div>
+        </div>
+      </div>
+
+      <div class="fit-card r">
+        <div class="fit-card-top">
+          <h3>BayesianRidge</h3>
+          <div class="fc-tag">LightweightMMM fallback · evidence optimisation</div>
+        </div>
+        <div class="fit-card-body">
+          <div class="fit-metric">
+            <div class="fm-lbl">R²</div>
+            <div class="fm-val ok">0.54</div>
+          </div>
+          <div class="fit-metric">
+            <div class="fm-lbl">Train MAPE</div>
+            <div class="fm-val bad">36%</div>
+          </div>
+          <div class="fit-metric">
+            <div class="fm-lbl">Test MAPE</div>
+            <div class="fm-val good">15.1%</div>
+          </div>
+          <div class="fit-note">
+            Best out-of-sample performance. Test MAPE 15.1% is the most reliable forecast signal. Used as tiebreaker when PyMC and Ridge disagree.
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     S9 — RECOMMENDATIONS
+     S7 — ROI BAR CHART
      ═══════════════════════════════════════════════════════════ -->
-<section class="slide" id="s9">
+<section class="slide" id="s7">
+  <div class="s7-left">
+    <div class="eyebrow r">Round 10 · ROI</div>
+    <h2 class="r">Three models.<br>Main channels.</h2>
+    <p class="r">Confirmed channel ROI is remarkably consistent across all three models. Medium-signal channels diverge more but show directional agreement for the first time.</p>
+    <div class="s7-highlight r">
+      <div class="hv">37.3×</div>
+      <div class="hl">google_search mean ROI · first Google signal</div>
+    </div>
+  </div>
+  <div class="s7-right">
+
+    <div class="grouped-bar-section r">
+      <div class="gbs-label">meta_facebook — confirmed, CV 3.2%</div>
+      <div class="bar-group">
+        <div class="bg-model">Ridge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="93" style="background:#A91E2C;"></div></div>
+        <div class="bg-val">1.48×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">PyMC</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="95" style="background:#D63031;"></div></div>
+        <div class="bg-val">1.52×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">BayesRidge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="100" style="background:#C0122A;"></div></div>
+        <div class="bg-val">1.60×</div>
+      </div>
+    </div>
+
+    <div class="grouped-bar-section r">
+      <div class="gbs-label">meta_instagram — medium, CV 35.6%</div>
+      <div class="bar-group">
+        <div class="bg-model">Ridge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="45" style="background:#5BA3D9;"></div></div>
+        <div class="bg-val">1.30×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">PyMC</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="100" style="background:#7AB8E8;"></div></div>
+        <div class="bg-val">2.92×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">BayesRidge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="57" style="background:#9DD0F0;"></div></div>
+        <div class="bg-val">1.65×</div>
+      </div>
+    </div>
+
+    <div class="grouped-bar-section r">
+      <div class="gbs-label">google_search — medium, CV 28.1% (first Google signal)</div>
+      <div class="bar-group">
+        <div class="bg-model">Ridge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="83" style="background:#1a8040;"></div></div>
+        <div class="bg-val">40.1×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">PyMC</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="100" style="background:#2aa054;"></div></div>
+        <div class="bg-val">48.6×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">BayesRidge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="48" style="background:#4dc07a;"></div></div>
+        <div class="bg-val">23.3×</div>
+      </div>
+    </div>
+
+    <div class="grouped-bar-section r" style="opacity:.55;">
+      <div class="gbs-label">google_shopping — uncertain, CV 119.7%</div>
+      <div class="bar-group">
+        <div class="bg-model">Ridge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="7" style="background:#aaa;"></div></div>
+        <div class="bg-val">16.7×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">PyMC</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="100" style="background:#bbb;"></div></div>
+        <div class="bg-val">230×</div>
+      </div>
+      <div class="bar-group">
+        <div class="bg-model">BayesRidge</div>
+        <div class="bg-track"><div class="bg-fill" data-pct="4" style="background:#ccc;"></div></div>
+        <div class="bg-val">9.6×</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S8 — RECOMMENDATIONS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="slide" id="s8">
   <div class="wrap">
-    <div class="eyebrow r">07 — Recommendations</div>
-    <h2 class="r" style="margin-top:.5rem; margin-bottom:1.6rem;">Three actions, in priority order</h2>
+    <div class="eyebrow r">Round 10 · Recommendations</div>
+    <h2 class="r" style="margin-top:.5rem; margin-bottom:1.4rem;">Actions after 10 rounds</h2>
 
     <div class="rec-row r">
       <div class="rec-n">01</div>
       <div>
-        <div class="rec-title">Meta Instagram and Facebook are the only confirmed channels</div>
-        <div class="rec-body">Ridge and NNLS both rank Meta Facebook #1 and Meta Instagram #2 — the first cross-model agreement in this project. Meta Instagram delivers more per dollar (NNLS: 2.9×, Ridge: 1.5×) despite lower absolute spend ($226M vs $624M). This is directionally actionable within the Meta portfolio — consider shifting budget toward Instagram at the margin.</div>
+        <div class="rec-title">Maintain or increase meta_facebook budget</div>
+        <div class="rec-body">meta_facebook is the only channel confirmed across all 10 rounds. CV 3.2% — Ridge 1.48×, PyMC 1.52×, BayesianRidge 1.60× all agree tightly. Every dollar spent on meta_facebook returns approximately $1.53 in attributable first-purchase revenue. This is robust enough for budget planning.</div>
       </div>
     </div>
+
     <div class="rec-row r">
       <div class="rec-n">02</div>
       <div>
-        <div class="rec-title">Do not act on Google channel ROIs yet</div>
-        <div class="rec-body">Google Display shows −$55 Ridge ROI, Google Video −$4.4 — sign confounding from correlated spend patterns. Google Search shows 30.7× Ridge ROI which is implausibly high (meta_other shows 291× for the same reason: tiny spend amplifies any positive coefficient). These signals need PyMC's priors to stabilise before any reallocation.</div>
+        <div class="rec-title">Watch meta_instagram — medium signal, improving</div>
+        <div class="rec-body">CV improving from 50.8% (R9) to 35.6% (R10). Mean ROI 1.96× is higher than meta_facebook but confidence is too wide for reallocation. A further 2–3 rounds targeting the PyMC saturation prior for instagram may bring CV below 20%. Do not reallocate yet — watch the next round.</div>
       </div>
     </div>
+
     <div class="rec-row r">
       <div class="rec-n">03</div>
       <div>
-        <div class="rec-title">Install gcc to unlock full Bayesian MMM</div>
-        <div class="rec-body">Run <code style="font-family:'IBM Plex Mono',monospace;font-size:.8rem;">brew install gcc</code> — this enables PyTensor C compilation, cutting PyMC sampling from 58 minutes to ~5 minutes. With full PyMC running, cross-model consensus on Meta channels would be confirmed with posterior credible intervals — enough to justify a budget reallocation decision at the marketing director level.</div>
+        <div class="rec-title">google_search: emerging signal, do not act on absolute ROI</div>
+        <div class="rec-body">37.3× mean ROI reflects efficiency at low spend volume, not a scalable return. CV 28.1% is the first credible Google signal but directional only. The high absolute value is typical of low-spend channels where any attribution amplifies ROI. If google_search budget is a fraction of Meta, a modest test increase with controlled holdout would be appropriate.</div>
+      </div>
+    </div>
+
+    <div class="rec-row r">
+      <div class="rec-n">04</div>
+      <div>
+        <div class="rec-title">Do not act on Google Shopping, PMax, Display, or Video</div>
+        <div class="rec-body">Sign disagreements across models indicate these channels are not yet identifiable from the data. google_shopping CV 119.7% with PyMC at 230× is prior-dominated. No budget decision should be made on these channels until sign disagreements are resolved — which may require additional spend data or longer time series.</div>
       </div>
     </div>
 
     <div class="bottom-line r">
-      <strong>Bottom line:</strong> First real finding — Meta Facebook and Instagram confirmed by two independent models. Meta Instagram is more efficient per dollar. Google channel ROIs are noisy and need PyMC to stabilise. Install gcc and run Round 4 for board-level confidence.
+      <strong>Bottom line after Round 10:</strong> meta_facebook is confirmed — maintain budget. meta_instagram is trending toward confirmation — watch. google_search has its first real signal — small test budget increase acceptable. All other Google channels remain uncertain. The tighter PyMC saturation prior is working; continue tightening for instagram in Round 11.
     </div>
-
-    <p class="r" style="margin-top:2rem;font-size:.72rem;color:var(--text-3);line-height:1.6;">
-      Dataset: <a href="https://figshare.com/articles/dataset/Multi-Region_Marketing_Mix_Modeling_MMM_Dataset_for_Several_eCommerce_Brands/25314841/3?file=46779652" target="_blank" style="color:var(--text-3);text-decoration:underline;">Multi-Region MMM Dataset for eCommerce Brands</a>, Figshare, CC BY 4.0. Results are illustrative and not from a real brand.
-    </p>
   </div>
 </section>
 
 <script>
-// ── EDA Data ──────────────────────────────────────────────────────────
-
-// Weekly revenue values (normalized to 0-1 for sparkline)
-const KPI_RAW = [19473450,30739845,34865010,28460700,27254880,30177990,26834160,27643530,32895900,33282210,22040550,22696200,22553070,19688040,26064330,22348050,23406390,19296720,22347870,25217850,20756430,19039230,17793690,17609340,20374200,21461940,20568780,20680710,19394100,23072760,18803340,18627000,23680350,113974910,28085970,23697810,23012550,20601540,21208710,22050810,23048100,21003840,21018930,19558890,19793430,20313810,21456960,20617380,22254810,23673000,25157250,29046150,36697500,37561740,34017210,35568540,35118720,28248120,29337930,22748460,20427570,21459990,24162060,23444340,20936940,20490660,23088060,30155850,25498800,23028210,25178130,24539850,22543260,27765390,25706880,23851890,22696320,22637340,24888120,26070360,25019910,22618680,22520550,24100560,23918040,25234500,25695690,29040690,25994610,27698490,113025700,94653890,31063290,29568720,22649130,22337880,20904060,25046970,26095620,22879440,21688830,19451520,22108830,22248150,20705400,104083700,29718840,23540580,21028320,24013440,25869780,25285050,22817970,26068830,27665820,28649040,28285290,23826870,21453570,22166430,23521320,25706730,23484510,23059980,22424370,22397430,22095750,23033250,21622710,32274180];
-
-// Spend totals (millions USD)
-const SPEND_DATA = [
-  { lbl:'Meta Facebook',   val:624.0, color:'#A91E2C' },
-  { lbl:'Meta Instagram',  val:226.0, color:'#D63031' },
-  { lbl:'Google PMax',     val:74.2,  color:'#5BA3D9' },
-  { lbl:'Google Video',    val:16.2,  color:'#7AB8E8' },
-  { lbl:'Google Search',   val:18.0,  color:'#9DD0F0' },
-  { lbl:'Google Display',  val:6.6,   color:'#B8DCF4' },
-  { lbl:'Google Shopping', val:3.3,   color:'#d0d0da' },
-  { lbl:'Meta Other',      val:0.5,   color:'#d0d0da' },
-];
-
-// Channel KPI correlations
-const CORR_DATA = [
-  { lbl:'Meta Facebook',   r:0.61,  color:'#A91E2C' },
-  { lbl:'Google Search',   r:0.49,  color:'#D63031' },
-  { lbl:'Meta Instagram',  r:0.41,  color:'#C03030' },
-  { lbl:'Google Shopping', r:0.34,  color:'#5BA3D9' },
-  { lbl:'Meta Other',      r:0.21,  color:'#5BA3D9' },
-  { lbl:'Google PMax',     r:0.29,  color:'#7AB8E8' },
-  { lbl:'Google Display',  r:0.02,  color:'#d0d0da' },
-  { lbl:'Google Video',    r:-0.05, color:'#d0d0da' },
-];
-
-function renderSparkline() {
-  const svg = document.getElementById('kpi-spark');
-  if (!svg) return;
-  const min = Math.min(...KPI_RAW), max = Math.max(...KPI_RAW);
-  const n = KPI_RAW.length;
-  const pts = KPI_RAW.map((v,i) => {
-    const x = (i/(n-1))*498+1;
-    const y = 78 - ((v-min)/(max-min))*72;
-    return `${x},${y}`;
-  });
-  // Area fill
-  const areaD = `M1,79 L${pts.join(' L')} L499,79 Z`;
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#A91E2C" stop-opacity="0.35"/>
-        <stop offset="100%" stop-color="#A91E2C" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <path d="${areaD}" fill="url(#sg)"/>
-    <polyline points="${pts.join(' ')}" fill="none" stroke="#A91E2C" stroke-width="1.8"/>
-  `;
-  // Anomaly dots
-  const anomalyIdxs = [26, 87, 105, 111]; // approx week indices for anomalies
-  anomalyIdxs.forEach(i => {
-    if (i < n) {
-      const x = (i/(n-1))*498+1;
-      const y = 78 - ((KPI_RAW[i]-min)/(max-min))*72;
-      svg.innerHTML += `<circle cx="${x}" cy="${y}" r="4" fill="#C0122A" stroke="#ffffff" stroke-width="1.5"/>`;
-    }
-  });
-}
-
-function renderSpendBars() {
-  const el = document.getElementById('spend-bars');
-  if (!el) return;
-  const maxVal = Math.max(...SPEND_DATA.map(d=>d.val));
-  el.innerHTML = SPEND_DATA.map(d => {
-    const pct = (d.val/maxVal)*88;
-    return `<div class="spend-bar-row">
-      <div class="spend-bar-lbl">${d.lbl}</div>
-      <div class="spend-bar-track"><div class="spend-bar-fill" data-pct="${pct}" style="background:${d.color}"></div></div>
-      <div class="spend-bar-val">$${d.val>=1?d.val.toFixed(0)+'M':Math.round(d.val*1000)+'K'}</div>
-    </div>`;
-  }).join('');
-}
-
-function renderCorrBars() {
-  const el = document.getElementById('corr-bars');
-  if (!el) return;
-  el.innerHTML = CORR_DATA.map(d => {
-    const pct = Math.max(0, (d.r/0.7)*85);
-    const color = d.r >= 0.4 ? '#A91E2C' : d.r >= 0.2 ? '#D63031' : d.r >= 0 ? '#5BA3D9' : '#d0d0da';
-    return `<div class="corr-row">
-      <div class="corr-lbl">${d.lbl}</div>
-      <div class="corr-track"><div class="corr-fill" data-pct="${pct}" style="background:${color}"></div></div>
-      <div class="corr-val">${d.r.toFixed(2)}</div>
-    </div>`;
-  }).join('');
-}
-
-// Init EDA charts (will animate when slide enters view via existing IO)
-renderSparkline();
-renderSpendBars();
-renderCorrBars();
-
-// ── Data ──────────────────────────────────────────────────────────────
-// AUTO-UPDATE: ROI_DATA_START
-const ROI = [
-  { lbl:'meta_other', roi:0.000, color:'#1a2240', top:false },
-  { lbl:'google_shopping ⚠️', roi:36.861, color:'#E07070', top:true },
-  { lbl:'google_search', roi:0.000, color:'#1a2240', top:false },
-  { lbl:'meta_instagram', roi:2.873, color:'#D63031', top:false },
-  { lbl:'meta_facebook', roi:1.876, color:'#D63031', top:false },
-  { lbl:'google_pmax', roi:0.000, color:'#1a2240', top:false },
-  { lbl:'google_video', roi:0.000, color:'#1a2240', top:false },
-  { lbl:'google_display', roi:0.000, color:'#1a2240', top:false }
-];
-// AUTO-UPDATE: ROI_DATA_END
-
-// AUTO-UPDATE: CONTRIB_DATA_START
-const RIDGE = [
-  { lbl:'Baseline',  pct:100.0, color:'#3a3a44' },
-  { lbl:'All Media (zeroed)', pct:0.0, color:'#A91E2C' },
-];
-const NNLS = [
-  { lbl:'Meta Facebook', pct:42.47, color:'#A91E2C' },
-  { lbl:'Meta Instagram', pct:20.05, color:'#D63031' },
-  { lbl:'Google Shopping', pct:4.52, color:'#c06060' }
-];
-// AUTO-UPDATE: CONTRIB_DATA_END
-
-// ── Render bar charts ──────────────────────────────────────────────────
-function renderBars(id, data, maxVal) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = data.map(d => {
-    const v = d.roi !== undefined ? d.roi : d.pct;
-    const pct = maxVal > 0 ? (v / maxVal) * 84 : 0;
-    const disp = d.roi !== undefined ? d.roi.toFixed(3) : d.pct.toFixed(1)+'%';
-    return `<div class="bar-row">
-      <div class="bar-lbl${d.top?' top':''}">${d.lbl}</div>
-      <div class="bar-track"><div class="bar-fill" data-pct="${pct}" style="background:${d.color};"></div></div>
-      <div class="bar-val">${disp}</div>
-    </div>`;
-  }).join('');
-}
-
-const maxROI = Math.max(...ROI.map(d=>d.roi), 0.001);
-renderBars('roi-chart',        ROI,   maxROI);
-renderBars('ridge-contrib-s7', RIDGE, 100);
-renderBars('nnls-contrib-s7',  NNLS,  100);
-
-// ── Animate bars ───────────────────────────────────────────────────────
+// ── Animate bar fills ─────────────────────────────────────────────────
 function animateBars(root) {
-  root.querySelectorAll('.bar-fill, .spend-bar-fill, .corr-fill').forEach(b => {
-    const t = parseFloat(b.dataset.pct)||0;
+  root.querySelectorAll('.bg-fill, .roi-bar-fill, .bar-fill').forEach(b => {
+    const t = parseFloat(b.dataset.pct) || 0;
     b.style.width = '0%';
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       b.style.transition = 'width 1.1s cubic-bezier(.16,1,.3,1)';
-      b.style.width = t+'%';
+      b.style.width = t + '%';
     }));
   });
 }
@@ -1313,22 +1040,22 @@ const N = slides.length;
 let cur = 0;
 
 const dotsEl = document.getElementById('dots');
-slides.forEach((_,i) => {
+slides.forEach((_, i) => {
   const d = document.createElement('div');
-  d.className = 'dot'+(i===0?' active':'');
-  d.onclick = ()=>goTo(i);
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
   dotsEl.appendChild(d);
 });
 
 function updateUI(i) {
   cur = i;
-  document.getElementById('progress').style.width = (N>1?(i/(N-1))*100:0)+'%';
-  document.querySelectorAll('.dot').forEach((d,j)=>d.classList.toggle('active',j===i));
+  document.getElementById('progress').style.width = (N > 1 ? (i / (N - 1)) * 100 : 0) + '%';
+  document.querySelectorAll('.dot').forEach((d, j) => d.classList.toggle('active', j === i));
 }
 
 function goTo(i) {
-  i = Math.max(0, Math.min(N-1, i));
-  slides[i].scrollIntoView({behavior:'smooth'});
+  i = Math.max(0, Math.min(N - 1, i));
+  slides[i].scrollIntoView({ behavior: 'smooth' });
 }
 
 // IntersectionObserver: reveal + animate
@@ -1337,35 +1064,37 @@ const io = new IntersectionObserver(entries => {
     if (!e.isIntersecting) return;
     const i = slides.indexOf(e.target);
     if (i !== -1) updateUI(i);
-    e.target.querySelectorAll('.r').forEach(el=>el.classList.add('on'));
-    if (e.target.querySelector('.bar-fill, .spend-bar-fill, .corr-fill')) setTimeout(()=>animateBars(e.target), 300);
+    e.target.querySelectorAll('.r').forEach(el => el.classList.add('on'));
+    if (e.target.querySelector('.bg-fill, .roi-bar-fill, .bar-fill')) {
+      setTimeout(() => animateBars(e.target), 300);
+    }
   });
-}, {threshold: 0.45});
+}, { threshold: 0.35 });
 
-slides.forEach(s=>io.observe(s));
+slides.forEach(s => io.observe(s));
 
 // Keyboard
-document.addEventListener('keydown', e=>{
-  if (['ArrowDown','ArrowRight',' ','PageDown'].includes(e.key)) { e.preventDefault(); goTo(cur+1); }
-  if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key))          { e.preventDefault(); goTo(cur-1); }
-  if (e.key==='Home') { e.preventDefault(); goTo(0); }
-  if (e.key==='End')  { e.preventDefault(); goTo(N-1); }
+document.addEventListener('keydown', e => {
+  if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); goTo(cur + 1); }
+  if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key))           { e.preventDefault(); goTo(cur - 1); }
+  if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  if (e.key === 'End')  { e.preventDefault(); goTo(N - 1); }
 });
 
 // Wheel
-let wt=null;
-document.addEventListener('wheel', e=>{
-  if(wt) return; e.preventDefault();
-  goTo(cur+(e.deltaY>0?1:-1));
-  wt=setTimeout(()=>wt=null, 820);
-},{passive:false});
+let wt = null;
+document.addEventListener('wheel', e => {
+  if (wt) return; e.preventDefault();
+  goTo(cur + (e.deltaY > 0 ? 1 : -1));
+  wt = setTimeout(() => wt = null, 820);
+}, { passive: false });
 
 // Touch
-let ty=0;
-document.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
-document.addEventListener('touchend',e=>{
-  const d=ty-e.changedTouches[0].clientY;
-  if(Math.abs(d)>50) goTo(cur+(d>0?1:-1));
+let ty = 0;
+document.addEventListener('touchstart', e => ty = e.touches[0].clientY, { passive: true });
+document.addEventListener('touchend', e => {
+  const d = ty - e.changedTouches[0].clientY;
+  if (Math.abs(d) > 50) goTo(cur + (d > 0 ? 1 : -1));
 });
 </script>
 </body>
